@@ -22,10 +22,21 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/assets"],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/assets/css/bootstrap.min.css",
+              "src/assets/css/bootstrap-theme.css",
+              "src/assets/css/elegant-icons-style.css",
+              "src/assets/css/font-awesome.css",
+              "src/assets/css/style.css",
+              "src/assets/css/style-responsive.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/jquery.js",
+              "src/assets/js/bootstrap.min.js",
+              "src/assets/js/jquery.scrollTo.min.js",
+              "src/assets/js/jquery.nicescroll.js",
+              "src/assets/js/scripts.js"
+            ]
           },
           "configurations": {
             "production": {

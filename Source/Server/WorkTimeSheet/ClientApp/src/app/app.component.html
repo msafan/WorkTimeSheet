@@ -1,6 +1,18 @@
-<body>
-  <app-nav-menu></app-nav-menu>
-  <div class="container">
-    <router-outlet></router-outlet>
-  </div>
-</body>
+<section *ngIf="isLoggedIn()" id="container">
+  <app-header></app-header>
+  <app-side-bar></app-side-bar>
+  <section id="container">
+    <section id="container" class="">
+      <!--main content start-->
+      <section id="main-content">
+        <section class="wrapper">
+          <router-outlet></router-outlet>
+        </section>
+      </section>
+    </section>
+  </section>
+
+</section>
+
+
+<app-login *ngIf="!isLoggedIn()"></app-login>
