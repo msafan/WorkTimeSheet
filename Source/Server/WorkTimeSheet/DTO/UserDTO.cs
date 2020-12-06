@@ -6,7 +6,7 @@ namespace WorkTimeSheet.DTO
     {
         public UserDTO()
         {
-            WorkLogs = new HashSet<WorkLogDTO>();
+            UserRoles = new HashSet<UserRoleDTO>();
         }
 
         public int Id { get; set; }
@@ -14,6 +14,6 @@ namespace WorkTimeSheet.DTO
         public string Name { get; set; }
         public string Email { get; set; }
 
-        public virtual ICollection<WorkLogDTO> WorkLogs { get; set; }
+        public ICollection<UserRoleDTO> UserRoles { get; set; }
     }
 }

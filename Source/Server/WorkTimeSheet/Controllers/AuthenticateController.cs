@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using WorkTimeSheet.Authentication;
 using WorkTimeSheet.DbModels;
@@ -26,8 +27,15 @@ namespace WorkTimeSheet.Controllers
         [AllowAnonymous]
         public IActionResult Post([FromBody] UserCredential userCredential)
         {
-            var user = DbContext.Users.FirstOrDefault(x => x.Email == userCredential.Email && x.Password == userCredential.Password);
+            var user = DbContext.Users
+                .Include(x => x.UserRoleMappings)
+                .ThenInclude(x => x.UserRole)
+                .FirstOrDefault(x => x.Email == userCredential.Email);
             if (user == null)
+                return Unauthorized();
+
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(userCredential.Password, user.Salt);
+            if (user.Password != hashedPassword)
                 return Unauthorized();
 
             var authorizedUser = _authenticationManager.Authenticate(Mapper.Map<UserDTO>(user));

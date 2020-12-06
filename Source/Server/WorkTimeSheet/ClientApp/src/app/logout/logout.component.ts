@@ -9,10 +9,12 @@ import { GlobalSettingsService } from '../global-settings.service';
 })
 export class LogoutComponent implements OnInit {
 
-  constructor(public globalSettings:GlobalSettingsService, public router: Router) { }
+  constructor(public globalSettings: GlobalSettingsService, public router: Router) { }
 
   ngOnInit() {
     this.globalSettings.isLoggedIn = false;
+    this.globalSettings.authorizedUser = null;
+    localStorage.removeItem('authorizedUser');
     this.router.navigate(['/']);
   }
 

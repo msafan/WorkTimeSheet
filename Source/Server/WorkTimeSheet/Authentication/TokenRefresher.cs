@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace WorkTimeSheet.Authentication
             if (refreshToken == null)
                 throw new SecurityTokenException("Invalid refresh token");
 
-            var user = _dbContext.Users.FirstOrDefault(x => x.Id == refreshToken.UserId);
+            var user = _dbContext.Users.Include(x => x.UserRoleMappings).ThenInclude(x => x.UserRole).FirstOrDefault(x => x.Id == refreshToken.UserId);
             if (user == null)
                 throw new SecurityTokenException("Invalid user");
 

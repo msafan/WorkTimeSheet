@@ -11,5 +11,7 @@ namespace WorkTimeSheet.DTO
         public DateTime EndDateTime { get; set; }
         public string Remarks { get; set; }
         public long TimeInSeconds { get; set; }
+        public string Name { get; set; }
+        public string ProjectName { get; set; }
     }
 }

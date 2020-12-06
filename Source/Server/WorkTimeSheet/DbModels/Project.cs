@@ -19,7 +19,7 @@ namespace WorkTimeSheet.DbModels
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public virtual Organization Origanization { get; set; }
+        public virtual Organization Organization { get; set; }
         public virtual ICollection<CurrentWork> CurrentWorks { get; set; }
         public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
         public virtual ICollection<WorkLog> WorkLogs { get; set; }

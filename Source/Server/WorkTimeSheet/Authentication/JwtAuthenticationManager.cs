@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using WorkTimeSheet.Authentication;
@@ -55,7 +56,8 @@ namespace WorkTimeSheet
                 UserId = user.Id,
                 Name = user.Name,
                 AccessToken = tokenHandler.WriteToken(token),
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                Roles = user.UserRoles.ToList()
             };
         }
     }

@@ -14,8 +14,13 @@ namespace WorkTimeSheet
         {
             CreateMap<Organization, OrganizationDTO>();
             CreateMap<Project, ProjectDTO>();
-            CreateMap<User, UserDTO>();
-            CreateMap<WorkLog, WorkLogDTO>();
+            CreateMap<User, UserDTO>()
+                .ForMember(x => x.UserRoles, option => option.MapFrom(obj => obj.UserRoleMappings.Select(x => x.UserRole).ToList())
+            );
+            CreateMap<UserRole, UserRoleDTO>();
+            CreateMap<WorkLog, WorkLogDTO>()
+                .ForMember(x => x.ProjectName, option => option.MapFrom(x => x.Project != null ? x.Project.Name : string.Empty))
+                .ForMember(x => x.Name, option => option.MapFrom(x => x.User != null ? x.User.Name : string.Empty));
         }
     }
 }

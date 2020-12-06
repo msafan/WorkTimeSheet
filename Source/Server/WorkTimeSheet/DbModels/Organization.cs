@@ -15,7 +15,7 @@ namespace WorkTimeSheet.DbModels
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Address { get; set; }
+        public string Description { get; set; }
 
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<User> Users { get; set; }

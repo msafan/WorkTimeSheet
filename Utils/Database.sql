@@ -14,7 +14,7 @@ create table [dbo].[Organization]
 (
 	[ID] [int] identity(1,1) not null,
 	[Name] [varchar](100) not null,
-	[Address] [varchar](MAX) not null,
+	[Description] [varchar](MAX) null,
 	constraint [PK_Organization_ID] primary key clustered ([ID] asc)
 )
 
@@ -34,7 +34,8 @@ create table [dbo].[User]
 	[FK_ID_Organization] [int] not null,
 	[Name] [varchar](100) not null,
 	[Email] [varchar](100) not null,
-	[Password] [varchar](100) not null,
+	[Password] [varchar](MAX) not null,
+	[Salt] [varchar](MAX) not null,
 	constraint [PK_User_ID] primary key clustered ([ID] asc),
 	constraint [UK_User_Email] unique nonclustered([Email] asc),
 	constraint [FK_User_Organization] foreign key ([FK_ID_Organization]) references [dbo].[Organization] ([ID])

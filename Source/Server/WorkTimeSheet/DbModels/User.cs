@@ -19,6 +19,7 @@ namespace WorkTimeSheet.DbModels
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string Salt { get; set; }
 
         public virtual Organization Organization { get; set; }
         public virtual CurrentWork CurrentWork { get; set; }

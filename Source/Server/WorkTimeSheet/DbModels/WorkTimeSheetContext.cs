@@ -68,8 +68,7 @@ namespace WorkTimeSheet.DbModels
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Address)
-                    .IsRequired()
+                entity.Property(e => e.Description)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Name)
@@ -95,7 +94,7 @@ namespace WorkTimeSheet.DbModels
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Origanization)
+                entity.HasOne(d => d.Organization)
                     .WithMany(p => p.Projects)
                     .HasForeignKey(d => d.OrganizationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -169,7 +168,10 @@ namespace WorkTimeSheet.DbModels
 
                 entity.Property(e => e.Password)
                     .IsRequired()
-                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Salt)
+                    .IsRequired()
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.Organization)

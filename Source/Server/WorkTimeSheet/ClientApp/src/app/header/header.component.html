@@ -7,7 +7,7 @@
     </div>
 
     <!--logo start-->
-    <a href="index.html" class="logo">Work <span class="lite">Time Sheet</span></a>
+    <a [routerLink]="['/dashboard']" class="logo">Work <span class="lite">Time Sheet</span></a>
     <!--logo end-->
 
     <div class="top-nav notification-row">
@@ -17,7 +17,7 @@
             <!-- user login dropdown start-->
             <li class="dropdown">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                    <span class="username">Jenifer Smith</span>
+                    <span class="username">{{globalSettings.authorizedUser.name}}</span>
                     <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu extended logout">
