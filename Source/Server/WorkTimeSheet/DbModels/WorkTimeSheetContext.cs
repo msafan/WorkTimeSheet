@@ -25,14 +25,6 @@ namespace WorkTimeSheet.DbModels
         public virtual DbSet<UserRoleMapping> UserRoleMappings { get; set; }
         public virtual DbSet<WorkLog> WorkLogs { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Data Source=LAPTOP-RIFVALQ2;Initial Catalog=WorkTimeSheet;User ID=sa;Password=password@1");
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CurrentWork>(entity =>

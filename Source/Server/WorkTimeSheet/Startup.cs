@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,7 +36,9 @@ namespace WorkTimeSheet
 
             var key = "123456789qwertyuiop!@#$%^&*()";
 
-            services.AddTransient<IDbContext, WorkTimeSheetContext>();
+            services.AddDbContext<IDbContext, WorkTimeSheetContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("defaultConnectionString")));
+
             services.AddTransient<IRefreshTokenGenerator, RefreshTokenGenerator>();
             services.AddTransient<IJwtAuthenticationManager, JwtAuthenticationManager>(serviceProvider =>
             {
