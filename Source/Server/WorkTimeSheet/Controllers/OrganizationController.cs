@@ -27,9 +27,9 @@ namespace WorkTimeSheet.Controllers
 
         [HttpGet("{id}")]
         [ProducesDefaultResponseType(typeof(OrganizationDTO))]
-        public IActionResult GetById(int id)
+        public IActionResult GetByUserId(int id)
         {
-            var organization = DbContext.Organizations.Where(x => x.Id == CurrentUser.OrganizationId).Include(x => x.Users).Include(x => x.Projects).FirstOrDefault(x => x.Id == id);
+            var organization = DbContext.Organizations.Include(x => x.Users).Include(x => x.Projects).FirstOrDefault(x => x.Id == CurrentUser.OrganizationId);
             if (organization == null)
                 return NotFound();
             return Ok(Mapper.Map<OrganizationDTO>(organization));
@@ -68,7 +68,8 @@ namespace WorkTimeSheet.Controllers
                             {
                                 UserRoleId=ownerRole.Id
                             }
-                        }
+                        },
+                        CurrentWork = new CurrentWork()
                     }
                 }
             };
@@ -88,6 +89,7 @@ namespace WorkTimeSheet.Controllers
                 return NotFound();
 
             organization.Name = updateModel.Name;
+            organization.Description = updateModel.Description;
             DbContext.Organizations.Update(organization);
             DbContext.SaveChanges();
 

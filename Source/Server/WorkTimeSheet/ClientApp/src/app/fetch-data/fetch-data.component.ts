@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, Inject } from '@angular/core';
 
 @Component({
   selector: 'app-fetch-data',

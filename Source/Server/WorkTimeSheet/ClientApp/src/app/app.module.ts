@@ -1,22 +1,24 @@
+import { RouterModule } from '@angular/router';
+import { AppComponent } from './app.component';
+import { NavMenuComponent } from './nav-menu/nav-menu.component';
+import { HomeComponent } from './pages/home/home.component';
+import { CounterComponent } from './counter/counter.component';
+import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import { LoginComponent } from './pages/login/login.component';
+import { HeaderComponent } from './components/header/header.component';
+import { SideBarComponent } from './components/side-bar/side-bar.component';
+import { LogoutComponent } from './pages/logout/logout.component';
+import { UsersComponent } from './pages/users/users.component';
+import { OrganiztionComponent } from './pages/organiztion/organiztion.component';
+import { ReportComponent } from './pages/report/report.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
-
-import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { LoginComponent } from './login/login.component';
-import { HeaderComponent } from './header/header.component';
-import { SideBarComponent } from './side-bar/side-bar.component';
-import { LogoutComponent } from './logout/logout.component';
-import { UsersComponent } from './users/users.component';
-import { OrganiztionComponent } from './organiztion/organiztion.component';
-import { ReportComponent } from './report/report.component';
-import { RegisterComponent } from './register/register.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ProjectComponent } from './pages/project/project.component';
+import { ProjectService } from './services/project.service';
+import { GlobalSettings } from './models/global-settings';
+import { MomentModule } from 'ngx-moment';
 
 @NgModule({
   declarations: [
@@ -32,21 +34,22 @@ import { RegisterComponent } from './register/register.component';
     UsersComponent,
     OrganiztionComponent,
     ReportComponent,
-    RegisterComponent
+    ProjectComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    MomentModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', component: LoginComponent, pathMatch: 'full' },
       { path: 'dashboard', component: HomeComponent },
       { path: 'logout', component: LogoutComponent },
-      { path: 'users', component: UsersComponent },
+      { path: 'users', component: UsersComponent,  },
       { path: 'organization', component: OrganiztionComponent },
       { path: 'report', component: ReportComponent },
-      { path: 'register', component: RegisterComponent },
+      { path: 'project/:id', component: ProjectComponent },
       { path: 'counter2', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
     ])

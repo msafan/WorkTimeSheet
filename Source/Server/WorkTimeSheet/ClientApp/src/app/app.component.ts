@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { GlobalSettingsService } from './global-settings.service';
-import { AuthenticationService } from './services/authentication.service';
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { GlobalSettings } from "./models/global-settings";
+import { AuthenticationService } from "./services/authentication.service";
 
 @Component({
   selector: 'app-root',
@@ -10,7 +10,7 @@ import { AuthenticationService } from './services/authentication.service';
 export class AppComponent implements OnInit {
   title = 'app';
 
-  constructor(public globalSettings: GlobalSettingsService, public router: Router, public authenticationService: AuthenticationService) {
+  constructor(public globalSettings: GlobalSettings, public router: Router, public authenticationService: AuthenticationService) {
 
   }
 
@@ -27,7 +27,8 @@ export class AppComponent implements OnInit {
         .subscribe(response => {
           this.globalSettings.isLoggedIn = true;
           this.globalSettings.authorizedUser = response;
-          this.router.navigate(['/dashboard']);
+          if (this.router.url == "/")
+            this.router.navigate(['/dashboard']);
         }, error => {
           this.router.navigate(['/']);
         });

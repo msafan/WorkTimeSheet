@@ -1,10 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
-import { promise } from 'protractor';
-import { Observable } from 'rxjs';
-import { GlobalSettingsService } from '../global-settings.service';
-import { AuthorizedUser } from '../models/authorized-user';
-import { BaseWebApiService } from './base-web-api.service';
+import { HttpClient } from "@angular/common/http";
+import { Inject, Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { AuthorizedUser } from "../models/authorized-user";
+import { GlobalSettings } from "../models/global-settings";
+import { BaseWebApiService } from "./base-web-api.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +11,7 @@ import { BaseWebApiService } from './base-web-api.service';
 export class AuthenticationService extends BaseWebApiService {
 
   private api = 'api/authenticate/';
-  constructor(public globalSettings: GlobalSettingsService,
+  constructor(globalSettings: GlobalSettings,
     public httpClient: HttpClient,
     @Inject('BASE_URL') public baseUrl: string) {
     super(globalSettings, httpClient, baseUrl);

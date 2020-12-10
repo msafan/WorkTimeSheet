@@ -83,6 +83,9 @@ namespace WorkTimeSheet.DbModels
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.HasIndex(e => new { e.OrganizationId, e.Name }, "UK_Project_Organization")
+                    .IsUnique();
+
                 entity.Property(e => e.Description)
                     .IsRequired()
                     .IsUnicode(false);

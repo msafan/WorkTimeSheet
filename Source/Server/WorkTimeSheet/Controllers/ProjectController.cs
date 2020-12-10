@@ -24,7 +24,7 @@ namespace WorkTimeSheet.Controllers
             filterModel ??= new ProjectFilterModel();
 
             var query = DbContext.Projects
-                .Include(x=>x.ProjectMembers)
+                .Include(x => x.ProjectMembers)
                 .Where(x => x.OrganizationId == CurrentUser.OrganizationId);
 
             if (!string.IsNullOrEmpty(filterModel.Name))
@@ -43,14 +43,15 @@ namespace WorkTimeSheet.Controllers
             });
         }
 
-        [HttpGet("members")]
-        public IActionResult GetAllMembers([FromQuery] Pagination pagination, [FromQuery] ProjectMembersFilterModel filterModel)
+        [HttpGet("members/{id}")]
+        public IActionResult GetAllMembers(int id, [FromQuery] Pagination pagination, [FromQuery] ProjectMembersFilterModel filterModel)
         {
             pagination = pagination?.IsValid() ?? false ? pagination : Pagination.Default;
             filterModel ??= new ProjectMembersFilterModel();
 
-            var query = DbContext.ProjectMembers.
-                Include(x => x.User)
+            var query = DbContext.ProjectMembers
+                .Where(x => x.ProjectId == id)
+                .Include(x => x.User)
                 .ThenInclude(x => x.UserRoleMappings)
                 .ThenInclude(x => x.UserRole)
                 .Where(x => x.User.OrganizationId == CurrentUser.OrganizationId);
@@ -128,9 +129,32 @@ namespace WorkTimeSheet.Controllers
             if (project == null)
                 return NotFound();
 
-            var projectMembers = DbContext.ProjectMembers.Where(x => x.ProjectId == id).Where(x=>userIds.Contains(x.UserId)).ToList();
+            var projectMembers = DbContext.ProjectMembers.Where(x => x.ProjectId == id).Where(x => userIds.Contains(x.UserId)).ToList();
 
             DbContext.ProjectMembers.RemoveRange(projectMembers);
+            DbContext.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpPut("updatemembers/{id}")]
+        public IActionResult UpdateMembers(int id, [FromBody] List<int> userIds)
+        {
+            var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
+               .FirstOrDefault(x => x.Id == id);
+
+            if (project == null)
+                return NotFound();
+
+            var existingusers = DbContext.ProjectMembers.Where(x => x.ProjectId == id).Select(x => x.UserId).ToList();
+            var newUsers = userIds.Except(existingusers);
+            var usersToRemove = existingusers.Except(userIds);
+
+            DbContext.ProjectMembers.AddRange(newUsers.Select(x => new ProjectMember { ProjectId = id, UserId = x }));
+            
+            var projectMembersToRemove = DbContext.ProjectMembers.Where(x => usersToRemove.Contains(x.UserId) && x.ProjectId == id);
+            DbContext.ProjectMembers.RemoveRange(projectMembersToRemove);
+
             DbContext.SaveChanges();
 
             return NoContent();

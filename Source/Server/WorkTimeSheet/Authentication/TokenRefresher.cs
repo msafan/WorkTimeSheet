@@ -27,13 +27,15 @@ namespace WorkTimeSheet.Authentication
         public AuthorizedUser Refresh(AuthorizedUser authorizedUser)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
+
             var pricipal = tokenHandler.ValidateToken(authorizedUser.AccessToken, new Microsoft.IdentityModel.Tokens.TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(_key),
                 ValidateIssuer = false,
-                ValidateAudience = false
-            }, out var validatedToken);
+                ValidateAudience = false,
+                ValidateLifetime = false,
+            }, out var validatedToken) ;
 
             var jwtToken = validatedToken as JwtSecurityToken;
             if (jwtToken == null)

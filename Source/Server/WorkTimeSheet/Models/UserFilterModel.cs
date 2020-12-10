@@ -7,8 +7,15 @@ namespace WorkTimeSheet.Models
 {
     public class UserFilterModel
     {
+        public UserFilterModel()
+        {
+            Roles = new string[0];
+        }
+
         public string Name { get; set; }
 
         public string Email { get; set; }
+
+        public string[] Roles { get; set; }
     }
 }

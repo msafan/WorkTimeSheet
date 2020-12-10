@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Users
+            <a class="btn btn-success pull-right" data-toggle="modal" href="#createUserModal" *ngIf="isOwner"
+                data-backdrop="static" data-keyboard="false"><i class="icon_plus"></i> Add Work</a>
+        </h1>
+        <section class="panel">
+            <div class="panel-heading">Filter</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="name">User Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="User Name"
+                                [(ngModel)]="filterModel.name">
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="projectName">Project Name</label>
+                            <input type="text" class="form-control" id="projectName" placeholder="Project Name"
+                                [(ngModel)]="filterModel.projectName">
+                        </div>
+                    </div>
+                    <div class="col-lg-1">
+                        <a class="btn btn-primary btn-lg" (click)="filterReport()"><i class="icon_search"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Project</th>
+                        <th>In Time</th>
+                        <th>Out Time</th>
+                        <th>Remarks</th>
+                        <th>Total Time</th>
+                        <th *ngIf="isOwner || isProjectManager">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let workLog of workLogs">
+                        <td>{{workLog.name}}</td>
+                        <td>{{workLog.projectName}}</td>
+                        <td>{{toLocalTime(workLog.startDateTime) | date: 'dd/MM/YYYY hh:mm:ss aa'}}</td>
+                        <td>{{toLocalTime(workLog.endDateTime) | date: 'dd/MM/YYYY hh:mm:ss aa'}}</td>
+                        <td>{{workLog.remarks}}</td>
+                        <td>{{toTimeFormat(workLog.timeInSeconds)}}</td>
+                        <td *ngIf="isOwner || isProjectManager">
+                            <div class="btn-group">
+                                <a class="btn btn-primary" data-toggle="modal" href="#editUserModal"
+                                    data-backdrop="static" data-keyboard="false" (click)="initEditUser(user.id)"><i
+                                        class="icon_pencil-edit"></i></a>
+                                <a class="btn btn-danger" (click)="deleteUser(user.id)"><i
+                                        class="icon_trash_alt"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="5">Total Time</th>
+                        <th>{{toTimeFormat(totalWorkTime)}}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

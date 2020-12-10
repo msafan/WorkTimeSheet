@@ -14,7 +14,7 @@ namespace WorkTimeSheet.Models
         public bool OverridePageSize { get; set; }
 
         public static Pagination NoPagination => new Pagination { OverridePageSize = true, PageSize = -1 };
-        public static Pagination Default => new Pagination { PageNumber = 1, PageSize = 25 };
+        public static Pagination Default => new Pagination { OverridePageSize = true, PageSize = -1 };
 
         public bool HasPagination()
         {

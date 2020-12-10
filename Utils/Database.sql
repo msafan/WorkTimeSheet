@@ -25,6 +25,7 @@ create table [dbo].[Project]
 	[Name] [varchar](100) not null,
 	[Description] [varchar](MAX) not null,
 	constraint [PK_Project_ID] primary key clustered ([ID] asc),
+	constraint [UK_Project_Organization] unique nonclustered([FK_ID_Organization] asc, [Name] asc),
 	constraint [FK_Project_Organization] foreign key ([FK_ID_Organization]) references [dbo].[Organization] ([ID])
 )
 

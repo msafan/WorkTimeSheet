@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using WorkTimeSheet.DbModels;
 using WorkTimeSheet.DTO;
@@ -30,6 +31,8 @@ namespace WorkTimeSheet.Controllers
                 query = query.Where(x => x.Name.Contains(filterModel.Name));
             if (!string.IsNullOrEmpty(filterModel.Email))
                 query = query.Where(x => x.Email.Contains(filterModel.Email));
+            if (filterModel.Roles != null && filterModel.Roles.Any())
+                query = query.Where(x => x.UserRoleMappings.Any(y => filterModel.Roles.Contains(y.UserRole.Role)));
 
             query = Paginate(query, pagination, out var paginationToReturn);
 
@@ -38,6 +41,13 @@ namespace WorkTimeSheet.Controllers
                 Pagination = paginationToReturn,
                 Items = query.Select(x => Mapper.Map<UserDTO>(x)).ToList()
             });
+        }
+
+        [HttpGet("roles")]
+        public IActionResult GetAllUserRoles()
+        {
+            var userRoles = DbContext.UserRoles.ToList();
+            return Ok(Mapper.Map<IList<UserRoleDTO>>(userRoles));
         }
 
         [HttpGet("{id}")]
@@ -64,7 +74,8 @@ namespace WorkTimeSheet.Controllers
                 Password = password.HashedPassword,
                 Salt = password.Salt,
                 OrganizationId = CurrentUser.OrganizationId,
-                UserRoleMappings = createUserModel.RoleIds.Select(x => new UserRoleMapping { UserRoleId = x }).ToList()
+                UserRoleMappings = createUserModel.RoleIds.Select(x => new UserRoleMapping { UserRoleId = x }).ToList(),
+                CurrentWork = new CurrentWork()
             };
 
             DbContext.Users.Add(user);
