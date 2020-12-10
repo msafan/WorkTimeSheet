@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WorkTimeSheet.Views.MainPage"
+             Title="{Binding Title}">
+
+    <Grid HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Entry Grid.Row="0" Grid.Column="1" Text="{Binding Email}" Placeholder="Email" Keyboard="Email" />
+        <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Password}" Placeholder="Password" IsPassword="True"/>
+        <Button Grid.Row="2" Grid.Column="1" Text="Login" Command="{Binding LoginCommand}"/>
+    </Grid>
+
+</ContentPage>
