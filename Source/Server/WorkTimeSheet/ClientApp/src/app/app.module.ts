@@ -1,32 +1,24 @@
-import { RouterModule } from '@angular/router';
-import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './pages/home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { LoginComponent } from './pages/login/login.component';
-import { HeaderComponent } from './components/header/header.component';
-import { SideBarComponent } from './components/side-bar/side-bar.component';
-import { LogoutComponent } from './pages/logout/logout.component';
-import { UsersComponent } from './pages/users/users.component';
-import { OrganiztionComponent } from './pages/organiztion/organiztion.component';
-import { ReportComponent } from './pages/report/report.component';
-import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { ProjectComponent } from './pages/project/project.component';
-import { ProjectService } from './services/project.service';
-import { GlobalSettings } from './models/global-settings';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 import { MomentModule } from 'ngx-moment';
+import { AppComponent } from './app.component';
+import { HeaderComponent } from './components/header/header.component';
+import { SideBarComponent } from './components/side-bar/side-bar.component';
+import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './pages/login/login.component';
+import { LogoutComponent } from './pages/logout/logout.component';
+import { OrganiztionComponent } from './pages/organiztion/organiztion.component';
+import { ProjectComponent } from './pages/project/project.component';
+import { ReportComponent } from './pages/report/report.component';
+import { UsersComponent } from './pages/users/users.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
     LoginComponent,
     HeaderComponent,
     SideBarComponent,
@@ -49,9 +41,7 @@ import { MomentModule } from 'ngx-moment';
       { path: 'users', component: UsersComponent,  },
       { path: 'organization', component: OrganiztionComponent },
       { path: 'report', component: ReportComponent },
-      { path: 'project/:id', component: ProjectComponent },
-      { path: 'counter2', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'project/:id', component: ProjectComponent }
     ])
   ],
   providers: [],
