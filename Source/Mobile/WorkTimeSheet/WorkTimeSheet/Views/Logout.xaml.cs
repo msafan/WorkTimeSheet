@@ -2,9 +2,9 @@
 
 namespace WorkTimeSheet.Views
 {
-    public partial class WorkStatus : ContentPage
+    public partial class Logout : ContentPage
     {
-        public WorkStatus()
+        public Logout()
         {
             InitializeComponent();
         }

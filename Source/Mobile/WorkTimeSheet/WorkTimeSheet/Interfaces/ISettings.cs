@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WorkTimeSheet.Interfaces
 {
-    public interface IUserSettings
+    public interface ISettings
     {
         Plugin.Settings.Abstractions.ISettings AppSettings { get; }
     }

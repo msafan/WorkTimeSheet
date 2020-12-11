@@ -20,7 +20,7 @@
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <PackageCertificateKeyFile>WorkTimeSheet.UWP_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
-<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
@@ -104,6 +104,9 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\dashboard.png" />
+    <Content Include="Images\logout.png" />
+    <Content Include="Images\logs.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

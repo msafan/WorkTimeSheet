@@ -2,9 +2,9 @@
 
 namespace WorkTimeSheet.Views
 {
-    public partial class WorkLogs : ContentPage
+    public partial class Logs : ContentPage
     {
-        public WorkLogs()
+        public Logs()
         {
             InitializeComponent();
         }

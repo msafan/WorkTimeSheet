@@ -5,7 +5,7 @@ using WorkTimeSheet.Models;
 
 namespace WorkTimeSheet.Interfaces
 {
-    public interface IUserSettings : IUserSettings
+    public interface IUserSettings : ISettings
     {
         AuthorizedUser AuthorizedUser { get; set; }
     }

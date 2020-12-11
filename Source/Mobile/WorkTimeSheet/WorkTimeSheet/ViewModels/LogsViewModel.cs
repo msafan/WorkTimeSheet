@@ -7,11 +7,10 @@ using System.Linq;
 
 namespace WorkTimeSheet.ViewModels
 {
-    public class WorkStatusViewModel : ViewModelBase
+    public class LogsViewModel : ViewModelBase
     {
-        public WorkStatusViewModel(INavigationService navigationService) : base(navigationService)
+        public LogsViewModel(INavigationService navigationService) : base(navigationService)
         {
-
         }
     }
 }

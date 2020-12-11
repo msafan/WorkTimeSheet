@@ -2,6 +2,7 @@ using Prism;
 using Prism.Ioc;
 using WorkTimeSheet.Interfaces;
 using WorkTimeSheet.Services;
+using WorkTimeSheet.Settings;
 using WorkTimeSheet.ViewModels;
 using WorkTimeSheet.Views;
 using Xamarin.Essentials.Implementation;
@@ -31,11 +32,14 @@ namespace WorkTimeSheet
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<Dashboard, DashboardViewModel>();
-            containerRegistry.RegisterForNavigation<WorkStatus, WorkStatusViewModel>();
-            containerRegistry.RegisterForNavigation<WorkLogs, WorkLogsViewModel>();
 
             containerRegistry.Register<IWebApiLayer, WebApiLayer>();
+            containerRegistry.Register<IUserSettings, UserSettings>();
             containerRegistry.Register<IAuthenticationService, AuthenticationService>();
+            containerRegistry.RegisterForNavigation<MasterDetail, MasterDetailViewModel>();
+            containerRegistry.RegisterForNavigation<Dashboard, DashboardViewModel>();
+            containerRegistry.RegisterForNavigation<Logout, LogoutViewModel>();
+            containerRegistry.RegisterForNavigation<Logs, LogsViewModel>();
         }
     }
 }

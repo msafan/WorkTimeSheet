@@ -3,8 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="http://prismlibrary.com"
              prism:ViewModelLocator.AutowireViewModel="True"
-             x:Class="WorkTimeSheet.Views.WorkLogs">
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Button Text="Start Work"></Button>
-    </StackLayout>
+             x:Class="WorkTimeSheet.Views.Logs">
+  
 </ContentPage>

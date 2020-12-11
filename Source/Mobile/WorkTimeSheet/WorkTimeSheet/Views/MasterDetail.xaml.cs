@@ -2,9 +2,9 @@
 
 namespace WorkTimeSheet.Views
 {
-    public partial class Dashboard : ContentPage
+    public partial class MasterDetail : MasterDetailPage
     {
-        public Dashboard()
+        public MasterDetail()
         {
             InitializeComponent();
         }
