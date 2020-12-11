@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit {
           workLogFilterModel.userId = this.globalSettings.authorizedUser.userId;
           this.workLogService.getAll(workLogFilterModel).subscribe(response => {
             this.workLogs = response.paginatedResults.items;
-            this.totalWorkTime = response.totalTime.totalSeconds;
+            this.totalWorkTime = response.totalTime;
           }, error => {
 
           });
@@ -149,7 +149,7 @@ export class HomeComponent implements OnInit {
     workLogFilterModel.projectId = this.selectedProject;
     this.workLogService.getAll(workLogFilterModel).subscribe(response => {
       this.workLogs = response.paginatedResults.items;
-      this.totalWorkTime = response.totalTime.totalSeconds;
+      this.totalWorkTime = response.totalTime;
     }, error => {
 
     });

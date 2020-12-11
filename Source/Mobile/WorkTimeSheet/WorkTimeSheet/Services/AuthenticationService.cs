@@ -16,15 +16,13 @@ namespace WorkTimeSheet.Services
         public async Task<AuthorizedUser> Authenticate(string email, string password)
         {
             var response = await WebApiLayer.PostAsync("authenticate", new { email, password });
-            var jsonSerializer = new JsonSerializer();
-            return jsonSerializer.Deserialize<AuthorizedUser>(new JsonTextReader(new StringReader(response)));
+            return JsonConvert.DeserializeObject<AuthorizedUser>(response);
         }
 
         public async Task<AuthorizedUser> RefreshAuthentication(AuthorizedUser authorizedUser)
         {
             var response = await WebApiLayer.PostAsync("authenticate/refresh", authorizedUser);
-            var jsonSerializer = new JsonSerializer();
-            return jsonSerializer.Deserialize<AuthorizedUser>(new JsonTextReader(new StringReader(response)));
+            return JsonConvert.DeserializeObject<AuthorizedUser>(response);
         }
     }
 }

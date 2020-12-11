@@ -8,7 +8,7 @@ namespace WorkTimeSheet.Models
 {
     public class WorkLogReport
     {
-        public TimeSpan TotalTime { get; set; }
+        public long TotalTime { get; set; }
         public PaginatedResults<WorkLogDTO> PaginatedResults { get; set; }
     }
 }

@@ -8,25 +8,32 @@
 
     <MasterDetailPage.Master>
         <ContentPage Title="Menu">
-            <ListView ItemsSource="{Binding MenuItems}" HasUnevenRows="True" SelectionMode="None">
-                <ListView.Behaviors>
-                    <prism:EventToCommandBehavior EventName="ItemTapped" Command="{Binding NavigateCommand}" EventArgsParameterPath="Item"/>
-                </ListView.Behaviors>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="48"/>
-                                </Grid.ColumnDefinitions>
-                                <Image Grid.Column="1" Source="{Binding Icon}"/>
-                                <Label VerticalOptions="CenterAndExpand" Margin="10" FontSize="24" Text="{Binding Title}"/>
-                            </Grid>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <ListView ItemsSource="{Binding MenuItems}" HasUnevenRows="True" SelectionMode="None">
+                    <ListView.Behaviors>
+                        <prism:EventToCommandBehavior EventName="ItemTapped" Command="{Binding NavigateCommand}" EventArgsParameterPath="Item"/>
+                    </ListView.Behaviors>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="48"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.Column="1" Source="{Binding Icon}"/>
+                                    <Label VerticalOptions="CenterAndExpand" Margin="10" FontSize="24" Text="{Binding Title}"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <Label Grid.Row="1" HorizontalOptions="CenterAndExpand" VerticalOptions="EndAndExpand" FontSize="24" Text="{Binding UserName}" />
+            </Grid>
         </ContentPage>
     </MasterDetailPage.Master>
 

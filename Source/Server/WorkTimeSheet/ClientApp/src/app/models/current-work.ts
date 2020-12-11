@@ -1,6 +1,6 @@
 
 export class CurrentWork {
-    public i: number;
+    public id: number;
     public userId: number;
     public projectId: number | null;
     public startDateTime: Date | null;

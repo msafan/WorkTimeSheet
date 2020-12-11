@@ -48,7 +48,7 @@ export class ReportComponent extends BaseComponent implements OnInit {
   public filterReport(): void {
     this.workLogService.getAll(this.filterModel).subscribe(response => {
       this.workLogs = response.paginatedResults.items;
-      this.totalWorkTime = response.totalTime.totalSeconds;
+      this.totalWorkTime = response.totalTime;
     }, error => {
 
     });

@@ -61,9 +61,9 @@ namespace WorkTimeSheet
             var client = GetHttpClient();
             HttpResponseMessage httpResponseMessage;
 
-            var request = new HttpRequestMessage(new HttpMethod(Constants.HttpMethodPatch), Constants.BaseUrl)
+            var request = new HttpRequestMessage(new HttpMethod(Constants.HttpMethodPatch), Constants.BaseUrl + api)
             {
-                Content = new StringContent(JsonConvert.SerializeObject(parameter), Encoding.UTF8, Constants.MediaType)
+                Content = new StringContent(JsonConvert.SerializeObject(parameter ?? new object()), Encoding.UTF8, Constants.MediaType)
             };
             try
             {

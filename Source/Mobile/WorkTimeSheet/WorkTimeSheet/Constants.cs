@@ -8,6 +8,6 @@ namespace WorkTimeSheet
     {
         public const string BaseUrl = "http://192.168.0.9/WorkTimeSheet/api/";
         public const string MediaType = "application/json";
-        public const string HttpMethodPatch = "patch";
+        public const string HttpMethodPatch = "PATCH";
     }
 }

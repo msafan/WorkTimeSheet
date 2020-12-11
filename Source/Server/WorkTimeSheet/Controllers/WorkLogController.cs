@@ -45,7 +45,7 @@ namespace WorkTimeSheet.Controllers
 
             return Ok(new WorkLogReport
             {
-                TotalTime = TimeSpan.FromSeconds(totalTimeInSeconds),
+                TotalTime = totalTimeInSeconds,
                 PaginatedResults = new PaginatedResults<WorkLogDTO>
                 {
                     Pagination = paginationToReturn,

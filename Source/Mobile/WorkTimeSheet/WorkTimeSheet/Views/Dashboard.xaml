@@ -1,10 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="http://prismlibrary.com"
+             xmlns:prism="http://prismlibrary.com" xmlns:converters="clr-namespace:WorkTimeSheet.Converters"
              prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="WorkTimeSheet.Views.Dashboard" Title="{Binding Title}">
-    <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Button Text="Start Work"/>
-    </StackLayout>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:TimeSpanConverter x:Key="TimeSpanConverter"/>
+            <converters:BooleanNegationConverter x:Key="BooleanNegationConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackLayout Grid.Row="0">
+            <Label FontSize="24" Text="Select Project"></Label>
+            <Picker FontSize="24" IsEnabled="{Binding IsWorkStarted, Converter={StaticResource BooleanNegationConverter}}" SelectedItem="{Binding SelectedProject}" ItemsSource="{Binding Projects}" ItemDisplayBinding="{Binding Name}"/>
+        </StackLayout>
+        <StackLayout Grid.Row="1" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+            <Button IsVisible="{Binding IsWorkStarted, Converter={StaticResource BooleanNegationConverter}}" FontSize="48" BackgroundColor="Green" Padding="30" CornerRadius="10" TextColor="White" Text="Start Work" Command="{Binding StartWorkCommand}"/>
+
+            <Label IsVisible="{Binding IsWorkStarted}" Text="{Binding TimeSpan, Converter={StaticResource TimeSpanConverter}}" FontSize="48"/>
+            <Entry IsVisible="{Binding IsWorkStarted}" Text="{Binding Remarks}" FontSize="24" Placeholder="Remarks"/>
+            <Button IsVisible="{Binding IsWorkStarted}" FontSize="48" BackgroundColor="Red" Padding="30" CornerRadius="10" TextColor="White" Text="Stop Work" Command="{Binding StopWorkCommand}"/>
+        </StackLayout>
+    </Grid>
 </ContentPage>

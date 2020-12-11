@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using WorkTimeSheet.Interfaces;
 using WorkTimeSheet.Models;
 
 namespace WorkTimeSheet.ViewModels
@@ -13,8 +14,9 @@ namespace WorkTimeSheet.ViewModels
     {
         private List<MenuItem> _menuItems;
         private ICommand _navigateCommand;
+        private string _userName;
 
-        public MasterDetailViewModel(INavigationService navigationService) : base(navigationService)
+        public MasterDetailViewModel(INavigationService navigationService, IUserSettings userSettings) : base(navigationService)
         {
             MenuItems = new List<MenuItem>
             {
@@ -37,9 +39,12 @@ namespace WorkTimeSheet.ViewModels
                     NavigationUri="NavigationPage/Logout"
                 }
             };
+
+            UserName = userSettings.AuthorizedUser.Name;
         }
 
         public List<MenuItem> MenuItems { get => _menuItems; set => SetProperty(ref _menuItems, value); }
+        public string UserName { get => _userName; set => SetProperty(ref _userName, value); }
 
         public ICommand NavigateCommand => _navigateCommand ?? (_navigateCommand = new DelegateCommand<MenuItem>(ExecuteNavigateCommand));
 

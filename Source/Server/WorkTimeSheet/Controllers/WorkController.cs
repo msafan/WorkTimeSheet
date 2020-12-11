@@ -40,6 +40,9 @@ namespace WorkTimeSheet.Controllers
             if (member == null)
                 return NotFound();
 
+            if (work.ProjectId != null)
+                return BadRequest();
+
             work.ProjectId = project.Id;
             work.StartDateTime = DateTime.UtcNow;
 
@@ -63,6 +66,9 @@ namespace WorkTimeSheet.Controllers
             var member = DbContext.ProjectMembers.FirstOrDefault(x => x.UserId == CurrentUser.Id && x.ProjectId == project.Id);
             if (member == null)
                 return NotFound();
+
+            if (work.ProjectId == null)
+                return BadRequest();
 
             DbContext.WorkLogs.Add(new WorkLog
             {
