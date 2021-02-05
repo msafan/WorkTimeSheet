@@ -1,7 +1,9 @@
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { MomentModule } from 'ngx-moment';
 import { AppComponent } from './app.component';
@@ -14,6 +16,7 @@ import { OrganiztionComponent } from './pages/organiztion/organiztion.component'
 import { ProjectComponent } from './pages/project/project.component';
 import { ReportComponent } from './pages/report/report.component';
 import { UsersComponent } from './pages/users/users.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +30,7 @@ import { UsersComponent } from './pages/users/users.component';
     OrganiztionComponent,
     ReportComponent,
     ProjectComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -38,11 +42,14 @@ import { UsersComponent } from './pages/users/users.component';
       { path: '', component: LoginComponent, pathMatch: 'full' },
       { path: 'dashboard', component: HomeComponent },
       { path: 'logout', component: LogoutComponent },
-      { path: 'users', component: UsersComponent,  },
+      { path: 'users', component: UsersComponent, },
       { path: 'organization', component: OrganiztionComponent },
       { path: 'report', component: ReportComponent },
+      { path: 'profile', component: ProfileComponent },
       { path: 'project/:id', component: ProjectComponent }
-    ])
+    ]),
+    BrowserAnimationsModule,
+    ClipboardModule
   ],
   providers: [],
   bootstrap: [AppComponent]
