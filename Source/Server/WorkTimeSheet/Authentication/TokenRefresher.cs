@@ -51,6 +51,9 @@ namespace WorkTimeSheet.Authentication
             if (user == null)
                 throw new SecurityTokenException("Invalid user");
 
+            _dbContext.RefreshTokens.Remove(refreshToken);
+            _dbContext.SaveChanges();
+
             return _authenticationManager.Authenticate(_mapper.Map<UserDTO>(user));
         }
     }

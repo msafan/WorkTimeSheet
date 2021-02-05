@@ -3,7 +3,6 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using WorkTimeSheet.Authentication;
 using WorkTimeSheet.DbModels;
 using WorkTimeSheet.DTO;
@@ -24,7 +23,7 @@ namespace WorkTimeSheet
             _key = key;
         }
 
-        public AuthorizedUser Authenticate(UserDTO user)
+        public AuthorizedUser Authenticate(UserDTO user, bool isRefreshTokenRequired = true, DateTime? accessTokenExpiryDate = null)
         {
             if (user == null)
                 return null;
@@ -34,22 +33,27 @@ namespace WorkTimeSheet
             {
                 Subject = new ClaimsIdentity(
                     new Claim[] { new Claim(ClaimTypes.Name, user.Id.ToString()) }),
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = accessTokenExpiryDate ?? DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(_key),
                     SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            var refreshToken = _refreshTokenGenerator.GenerateToken();
 
-            _dbContext.RefreshTokens.Add(new RefreshToken
+            string refreshToken = string.Empty;
+            if (isRefreshTokenRequired)
             {
-                ExpireDateTime = DateTime.UtcNow.AddDays(14),
-                IssueDateTime = DateTime.UtcNow,
-                Token = refreshToken,
-                UserId = user.Id
-            });
-            _dbContext.SaveChanges();
+                refreshToken = _refreshTokenGenerator.GenerateToken();
+
+                _dbContext.RefreshTokens.Add(new RefreshToken
+                {
+                    ExpireDateTime = DateTime.UtcNow.AddDays(14),
+                    IssueDateTime = DateTime.UtcNow,
+                    Token = refreshToken,
+                    UserId = user.Id
+                });
+                _dbContext.SaveChanges();
+            }
 
             return new AuthorizedUser
             {

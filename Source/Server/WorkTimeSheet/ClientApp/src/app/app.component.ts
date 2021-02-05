@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
         .subscribe(response => {
           this.globalSettings.isLoggedIn = true;
           this.globalSettings.authorizedUser = response;
+          localStorage.setItem('authorizedUser', JSON.stringify(response));
           if (this.router.url == "/")
             this.router.navigate(['/dashboard']);
         }, error => {
