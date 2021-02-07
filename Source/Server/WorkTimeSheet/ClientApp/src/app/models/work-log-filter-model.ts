@@ -1,9 +1,9 @@
 import { FilterModel } from "./filter-model";
 
 export class WorkLogFilterModel extends FilterModel {
-    public name: string;
-    public projectName: string;
+    public names: string[];
+    public projectNames: string[];
     public startDate: Date;
-    public userId: number;
-    public projectId: number;
+    public userIds: number[];
+    public projectIds: number[];
 }

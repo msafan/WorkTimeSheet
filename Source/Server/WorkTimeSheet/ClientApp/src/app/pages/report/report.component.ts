@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { GlobalSettings } from 'src/app/models/global-settings';
+import { Pagination } from 'src/app/models/pagination';
+import { ProjectFilterModel } from 'src/app/models/project-filter-model';
 import { WorkLogFilterModel } from 'src/app/models/work-log-filter-model';
 import { WorkLogModel } from 'src/app/models/work-log-model';
+import { ProjectService } from 'src/app/services/project.service';
 import { WorkLogService } from 'src/app/services/work-log.service';
 import { BaseComponent } from '../base-component';
 
@@ -15,15 +18,15 @@ export class ReportComponent extends BaseComponent implements OnInit {
   public totalWorkTime: number = 0;
   public filterModel: WorkLogFilterModel = new WorkLogFilterModel();
 
-  constructor(public workLogService: WorkLogService, public globalSettings: GlobalSettings) {
+  constructor(private workLogService: WorkLogService, private globalSettings: GlobalSettings, private projectService: ProjectService) {
     super(globalSettings);
   }
 
   ngOnInit() {
     this.filterModel.noPagination();
     if (!this.isOwner && !this.isProjectManager)
-      this.filterModel.userId = this.globalSettings.authorizedUser.userId;
-      
+      this.filterModel.userIds = [this.globalSettings.authorizedUser.userId];
+
     this.filterReport();
   }
 

@@ -43,6 +43,21 @@ namespace WorkTimeSheet.Controllers
             });
         }
 
+        [HttpGet("myprojects")]
+        public IActionResult GetMyProjects([FromQuery] Pagination pagination)
+        {
+            pagination = pagination?.IsValid() ?? false ? pagination : Pagination.Default;
+
+            var query = DbContext.ProjectMembers.Where(x => x.UserId == CurrentUser.Id).Include(x => x.Project).Select(x => x.Project);
+            query = Paginate(query, pagination, out var paginationToReturn);
+
+            return Ok(new PaginatedResults<ProjectDTO>
+            {
+                Pagination = paginationToReturn,
+                Items = query.Select(x => Mapper.Map<ProjectDTO>(x)).ToList()
+            });
+        }
+
         [HttpGet("members/{id}")]
         public IActionResult GetAllMembers(int id, [FromQuery] Pagination pagination, [FromQuery] ProjectMembersFilterModel filterModel)
         {
@@ -151,7 +166,7 @@ namespace WorkTimeSheet.Controllers
             var usersToRemove = existingusers.Except(userIds);
 
             DbContext.ProjectMembers.AddRange(newUsers.Select(x => new ProjectMember { ProjectId = id, UserId = x }));
-            
+
             var projectMembersToRemove = DbContext.ProjectMembers.Where(x => usersToRemove.Contains(x.UserId) && x.ProjectId == id);
             DbContext.ProjectMembers.RemoveRange(projectMembersToRemove);
 

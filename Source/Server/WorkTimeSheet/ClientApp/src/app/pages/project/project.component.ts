@@ -23,7 +23,9 @@ export class ProjectComponent extends BaseComponent implements OnInit {
   public availableUsers: UserModel[] = [];
   public leftList: number[] = [];
   public rightList: number[] = [];
-  constructor(globalSettings: GlobalSettings, public route: ActivatedRoute, public projectService: ProjectService, public navigationService: NavigationService, public userService: UserService) {
+  constructor(globalSettings: GlobalSettings, private route: ActivatedRoute, 
+    private projectService: ProjectService, private navigationService: NavigationService, 
+    private userService: UserService) {
     super(globalSettings)
   }
 

@@ -31,6 +31,13 @@ export class BaseWebApiService {
     return this.httpClient.get<T>(this.baseUrl + url, { headers: this.getHeader(), params: search });
   }
 
+  protected getPaginated<T>(url: string, searchparam?: Pagination): Observable<T> {
+    let search: any = {};
+    if (searchparam != null)
+      search = searchparam;
+    return this.httpClient.get<T>(this.baseUrl + url, { headers: this.getHeader(), params: search });
+  }
+
   protected post<T>(url: string, parameters: any): Observable<T> {
     return this.httpClient.post<T>(this.baseUrl + url, parameters, { headers: this.getHeader() });
   }

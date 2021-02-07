@@ -27,18 +27,24 @@ namespace WorkTimeSheet.Controllers
                 .Include(x => x.User)
                 .Where(x => x.User.OrganizationId == CurrentUser.OrganizationId);
 
-            if (!string.IsNullOrEmpty(filterModel.Name))
-                query = query.Where(x => x.User.Name.Contains(filterModel.Name));
-            if (!string.IsNullOrEmpty(filterModel.ProjectName))
-                query = query.Where(x => x.Project.Name.Contains(filterModel.ProjectName));
+            if (filterModel.Names != null)
+                foreach (var filterName in filterModel.Names)
+                    query = query.Where(x => x.User.Name.Contains(filterName));
+            if (filterModel.ProjectNames != null)
+                foreach (var projectName in filterModel.ProjectNames)
+                    query = query.Where(x => x.Project.Name.Contains(projectName));
+
             if (filterModel.StartDate != null)
                 query = query.Where(x => x.StartDateTime >= filterModel.StartDate);
             if (filterModel.EndDate != null)
                 query = query.Where(x => x.StartDateTime <= filterModel.EndDate);
-            if (filterModel.UserId != null)
-                query = query.Where(x => x.UserId == filterModel.UserId);
-            if (filterModel.ProjectId != null)
-                query = query.Where(x => x.ProjectId == filterModel.ProjectId);
+
+            if (filterModel.UserIds != null)
+                foreach (var userId in filterModel.UserIds)
+                    query = query.Where(x => x.UserId == userId);
+            if (filterModel.ProjectIds != null)
+                foreach (var projectId in filterModel.ProjectIds)
+                    query = query.Where(x => x.ProjectId == projectId);
 
             var totalTimeInSeconds = query.Sum(x => x.TimeInSeconds);
             query = Paginate(query, pagination, out var paginationToReturn);

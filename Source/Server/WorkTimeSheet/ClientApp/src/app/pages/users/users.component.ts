@@ -22,7 +22,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
   public userRolesSelection: UserRoleSelection[] = [];
   public userToEdit: UserModel = new UserModel();
 
-  constructor(globalSettings: GlobalSettings, public userService: UserService, public router: Router) {
+  constructor(globalSettings: GlobalSettings, private userService: UserService, private router: Router) {
     super(globalSettings);
   }
 

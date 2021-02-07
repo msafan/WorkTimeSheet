@@ -13,10 +13,10 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { LogoutComponent } from './pages/logout/logout.component';
 import { OrganiztionComponent } from './pages/organiztion/organiztion.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 import { ProjectComponent } from './pages/project/project.component';
 import { ReportComponent } from './pages/report/report.component';
 import { UsersComponent } from './pages/users/users.component';
-import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [

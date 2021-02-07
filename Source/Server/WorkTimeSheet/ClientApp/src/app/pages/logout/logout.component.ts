@@ -9,7 +9,7 @@ import { GlobalSettings } from 'src/app/models/global-settings';
 })
 export class LogoutComponent implements OnInit {
 
-  constructor(public globalSettings: GlobalSettings, public router: Router) { }
+  constructor(private globalSettings: GlobalSettings, private router: Router) { }
 
   ngOnInit() {
     this.globalSettings.isLoggedIn = false;

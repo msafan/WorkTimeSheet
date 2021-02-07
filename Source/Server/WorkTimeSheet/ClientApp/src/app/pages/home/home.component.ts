@@ -32,8 +32,8 @@ export class HomeComponent implements OnInit {
   public workLogs: WorkLogModel[] = [];
   public totalWorkTime: number = 0;
 
-  constructor(public projectService: ProjectService, public globalSettings: GlobalSettings,
-    public userService: UserService, public workService: WorkService, public workLogService: WorkLogService) {
+  constructor(private projectService: ProjectService, private globalSettings: GlobalSettings,
+    private userService: UserService, private workService: WorkService, private workLogService: WorkLogService) {
 
   }
 
@@ -91,8 +91,8 @@ export class HomeComponent implements OnInit {
         if (this.selectedProject != null) {
           const workLogFilterModel = new WorkLogFilterModel();
           workLogFilterModel.noPagination();
-          workLogFilterModel.projectId = this.selectedProject;
-          workLogFilterModel.userId = this.globalSettings.authorizedUser.userId;
+          workLogFilterModel.projectIds = [this.selectedProject];
+          workLogFilterModel.userIds = [this.globalSettings.authorizedUser.userId];
           this.workLogService.getAll(workLogFilterModel).subscribe(response => {
             this.workLogs = response.paginatedResults.items;
             this.totalWorkTime = response.totalTime;
@@ -145,8 +145,8 @@ export class HomeComponent implements OnInit {
 
     const workLogFilterModel = new WorkLogFilterModel();
     workLogFilterModel.noPagination();
-    workLogFilterModel.userId = this.globalSettings.authorizedUser.userId;
-    workLogFilterModel.projectId = this.selectedProject;
+    workLogFilterModel.userIds = [this.globalSettings.authorizedUser.userId];
+    workLogFilterModel.projectIds = [this.selectedProject];
     this.workLogService.getAll(workLogFilterModel).subscribe(response => {
       this.workLogs = response.paginatedResults.items;
       this.totalWorkTime = response.totalTime;

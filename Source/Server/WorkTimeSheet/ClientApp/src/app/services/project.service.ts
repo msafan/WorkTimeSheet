@@ -25,6 +25,10 @@ export class ProjectService extends BaseWebApiService {
     return this.get<PaginatedResults<ProjectModel>>(this.api, projectFilterModel);
   }
 
+  public getMyProjects(pagination: Pagination): Observable<ProjectModel[]> {
+    return this.getPaginated<ProjectModel[]>(this.api + "myprojects", pagination);
+  }
+
   public create(projectModel: ProjectModel): Observable<ProjectModel> {
     return this.post<ProjectModel>(this.api, projectModel);
   }

@@ -18,11 +18,11 @@ export class LoginComponent implements OnInit {
   public loginForm: FormGroup;
   public registerForm: FormGroup;
 
-  constructor(public globalSettings: GlobalSettings,
-    public router: Router,
-    public authenticationService: AuthenticationService,
-    public formBuilder: FormBuilder,
-    public origanizationService: OrganizationService) { }
+  constructor(private globalSettings: GlobalSettings,
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private formBuilder: FormBuilder,
+    private origanizationService: OrganizationService) { }
 
   ngOnInit() {
     this.resetLoginForm();

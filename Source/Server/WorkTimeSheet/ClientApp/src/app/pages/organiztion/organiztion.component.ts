@@ -19,7 +19,8 @@ export class OrganiztionComponent extends BaseComponent implements OnInit {
   public organizationModelToEdit: OrganizationModel = new OrganizationModel();
   public projects: ProjectModel[] = [];
 
-  constructor(public origanizationService: OrganizationService, public globalSettings: GlobalSettings, public projectService: ProjectService) {
+  constructor(private origanizationService: OrganizationService, private globalSettings: GlobalSettings, 
+    private projectService: ProjectService) {
     super(globalSettings);
   }
 
