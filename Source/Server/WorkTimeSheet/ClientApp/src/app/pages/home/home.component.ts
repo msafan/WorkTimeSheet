@@ -6,10 +6,12 @@ import { ProjectFilterModel } from 'src/app/models/project-filter-model';
 import { ProjectModel } from 'src/app/models/project-model';
 import { WorkLogFilterModel } from 'src/app/models/work-log-filter-model';
 import { WorkLogModel } from 'src/app/models/work-log-model';
+import { CommonService } from 'src/app/services/common.service';
 import { ProjectService } from 'src/app/services/project.service';
 import { UserService } from 'src/app/services/user.service';
 import { WorkLogService } from 'src/app/services/work-log.service';
 import { WorkService } from 'src/app/services/work.service';
+import { BaseComponent } from '../base-component';
 
 declare function initializeJS(): void;
 
@@ -18,22 +20,21 @@ declare function initializeJS(): void;
   templateUrl: './home.component.html',
 })
 
-export class HomeComponent implements OnInit {
+export class HomeComponent extends BaseComponent implements OnInit {
 
   public projects: ProjectModel[] = [];
   public selectedProject: number;
   public disableProjectSelection: boolean = false;
   public currentWork: CurrentWork;
-  public days: number;
-  public hours: number;
-  public minutes: number;
-  public seconds: number;
+  public timer: string;
   public remarks: string;
   public workLogs: WorkLogModel[] = [];
   public totalWorkTime: number = 0;
 
   constructor(private projectService: ProjectService, private globalSettings: GlobalSettings,
-    private userService: UserService, private workService: WorkService, private workLogService: WorkLogService) {
+    private userService: UserService, private workService: WorkService, private workLogService: WorkLogService,
+    commonService: CommonService) {
+    super(globalSettings, commonService);
 
   }
 
@@ -44,17 +45,25 @@ export class HomeComponent implements OnInit {
 
   public startWork(): void {
     this.workService.startWork(this.selectedProject).subscribe(result => {
+      this.showSuccess('Work Started', 'Work started on ' + this.projects.filter(x => x.id == this.selectedProject)[0].name);
       this.getWorkStatus();
     }, error => {
-
+      this.showError('Cannot start work', 'Work might have already been started in different instance');
+      this.getWorkStatus();
     });
   }
 
   public stopWork(): void {
+    if (this.remarks == undefined || this.remarks == "") {
+      this.showError('Remarks missing', 'Need remarks for work.');
+      return;
+    }
     this.workService.stopWork(this.remarks).subscribe(result => {
+      this.showSuccess('Work stopped', 'Work stopped on ' + this.projects.filter(x => x.id == this.selectedProject)[0].name);
       this.getWorkStatus();
     }, error => {
-
+      this.showError('Cannot stop work', 'Work might have already been stopped in different instance')
+      this.getWorkStatus();
     });
   }
 
@@ -88,23 +97,13 @@ export class HomeComponent implements OnInit {
         } else if (this.projects.length == 1)
           this.selectedProject = this.projects[0].id;
 
-        if (this.selectedProject != null) {
-          const workLogFilterModel = new WorkLogFilterModel();
-          workLogFilterModel.noPagination();
-          workLogFilterModel.projectIds = [this.selectedProject];
-          workLogFilterModel.userIds = [this.globalSettings.authorizedUser.userId];
-          this.workLogService.getAll(workLogFilterModel).subscribe(response => {
-            this.workLogs = response.paginatedResults.items;
-            this.totalWorkTime = response.totalTime;
-          }, error => {
-
-          });
-        }
+        if (this.selectedProject != null)
+          this.getWorkLogForThisMonth();
       }, error => {
-
+        this.showException('Error', error);
       });
     }, error => {
-
+      this.showException('Error', error);
     });
   }
 
@@ -113,45 +112,28 @@ export class HomeComponent implements OnInit {
     const currentDateTime = Date.now();
     const timerDifference = currentDateTime - startDateTime;
     const seconds = Math.floor(timerDifference / 1000);
-    this.seconds = seconds % 60;
-    const minutes = Math.floor(seconds / 60);
-    this.minutes = minutes % 60;
-    const hours = Math.floor(minutes / 60);
-    this.hours = hours % 24;
-    this.days = Math.floor(hours / 24);
-  }
-
-  public toTimeFormat(totalSeconds: number): string {
-    const seconds = totalSeconds % 60;
-    const totalMinutes = Math.floor(totalSeconds / 60);
-    const minutes = totalMinutes % 60;
-    const hours = Math.floor(totalMinutes / 60);
-    const totalHours = hours % 24;
-    const days = Math.floor(totalHours / 24);
-
-    return `${days}:${hours}:${minutes}:${seconds}`;
-  }
-
-  public toLocalTime(dateTime: string): Date {
-    const date = new Date(dateTime);
-    return new Date(Date.UTC(date.getFullYear(),
-      date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(),
-      date.getSeconds(), date.getMilliseconds()));
+    this.timer = this.commonService.toTimeFormat(seconds);
   }
 
   public projectChanged(): void {
     this.workLogs = [];
     this.totalWorkTime = 0;
 
+    this.getWorkLogForThisMonth();
+  }
+
+  private getWorkLogForThisMonth() {
     const workLogFilterModel = new WorkLogFilterModel();
     workLogFilterModel.noPagination();
-    workLogFilterModel.userIds = [this.globalSettings.authorizedUser.userId];
     workLogFilterModel.projectIds = [this.selectedProject];
+    workLogFilterModel.userIds = [this.globalSettings.authorizedUser.userId];
+    workLogFilterModel.startDate = this.commonService.getFirstDateOfMonth();
+    workLogFilterModel.endDate = this.commonService.getLastDateOfMonth();
     this.workLogService.getAll(workLogFilterModel).subscribe(response => {
       this.workLogs = response.paginatedResults.items;
       this.totalWorkTime = response.totalTime;
     }, error => {
-
+      this.showException('Error', error);
     });
   }
 }

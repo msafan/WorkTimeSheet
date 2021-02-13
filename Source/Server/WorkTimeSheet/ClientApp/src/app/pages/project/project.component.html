@@ -79,8 +79,8 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-5">
-                        <h6>Avaiable users</h6>
-                        <select multiple class="form-control" [(ngModel)]="leftList">
+                        <h5>Avaiable users</h5>
+                        <select multiple class="form-control" [(ngModel)]="leftList" size=20>
                             <option *ngFor="let user of availableUsers" value="{{user.id}}">{{user.name}}</option>
                         </select>
                     </div>
@@ -88,16 +88,19 @@
                         <div class="row">
                             <h6>&nbsp;</h6>
                         </div>
-                        <div class="row">
+                        <div class="row text-center">
                             <a class="btn btn-success" (click)="addUser()">Add</a>
                         </div>
                         <div class="row">
+                            &nbsp;
+                        </div>
+                        <div class="row text-center">
                             <a class="btn btn-danger" (click)="removeUser()">Remove</a>
                         </div>
                     </div>
                     <div class="col-sm-5">
-                        <h6>Project Members</h6>
-                        <select multiple class="form-control" [(ngModel)]="rightList">
+                        <h5>Project Members</h5>
+                        <select multiple class="form-control" [(ngModel)]="rightList" size=20>
                             <option *ngFor="let user of selectedUsers" value="{{user.id}}">{{user.name}}</option>
                         </select>
                     </div>

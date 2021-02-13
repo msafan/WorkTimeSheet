@@ -1,25 +1,32 @@
 <div class="row">
     <div class="col-lg-12">
-        <h1>Users
-            <a class="btn btn-success pull-right" data-toggle="modal" href="#createUserModal" *ngIf="isOwner"
-                data-backdrop="static" data-keyboard="false"><i class="icon_plus"></i> Add Work</a>
+        <h1>Work logs / Report
+            <a class="btn btn-success pull-right" (click)="openModal(workModal)"
+                *ngIf="isOwner || isProjectManager"><i class="icon_plus"></i> Add Work</a>
         </h1>
         <section class="panel">
             <div class="panel-heading">Filter</div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-3" *ngIf="isOwner || isProjectManager">
                         <div class="form-group">
                             <label for="name">User Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="User Name"
-                                [(ngModel)]="filterModel.name">
+                            <angular2-multiselect [data]="users" id="projectName" [(ngModel)]="selectedUsers"
+                                [settings]="dropdownSettings"></angular2-multiselect>
                         </div>
                     </div>
                     <div class="col-lg-3">
                         <div class="form-group">
                             <label for="projectName">Project Name</label>
-                            <input type="text" class="form-control" id="projectName" placeholder="Project Name"
-                                [(ngModel)]="filterModel.projectName">
+                            <angular2-multiselect [data]="projects" id="projectName" [(ngModel)]="selectedProjects"
+                                [settings]="dropdownSettings"></angular2-multiselect>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-group">
+                            <label for="dateRange">Date Range</label>
+                            <input type="text" placeholder="Daterangepicker" class="form-control" bsDaterangepicker
+                                [(ngModel)]="dateRange">
                         </div>
                     </div>
                     <div class="col-lg-1">
@@ -50,16 +57,15 @@
                     <tr *ngFor="let workLog of workLogs">
                         <td>{{workLog.name}}</td>
                         <td>{{workLog.projectName}}</td>
-                        <td>{{toLocalTime(workLog.startDateTime) | date: 'dd/MM/YYYY hh:mm:ss aa'}}</td>
-                        <td>{{toLocalTime(workLog.endDateTime) | date: 'dd/MM/YYYY hh:mm:ss aa'}}</td>
+                        <td>{{commonService.toLocalTime(workLog.startDateTime) | date: 'dd/MM/YYYY hh:mm:ss aa'}}</td>
+                        <td>{{commonService.toLocalTime(workLog.endDateTime) | date: 'dd/MM/YYYY hh:mm:ss aa'}}</td>
                         <td>{{workLog.remarks}}</td>
-                        <td>{{toTimeFormat(workLog.timeInSeconds)}}</td>
+                        <td>{{commonService.toTimeFormat(workLog.timeInSeconds)}}</td>
                         <td *ngIf="isOwner || isProjectManager">
                             <div class="btn-group">
-                                <a class="btn btn-primary" data-toggle="modal" href="#editUserModal"
-                                    data-backdrop="static" data-keyboard="false" (click)="initEditUser(user.id)"><i
+                                <a class="btn btn-primary" (click)="editWork(workLog.id, workModal)"><i
                                         class="icon_pencil-edit"></i></a>
-                                <a class="btn btn-danger" (click)="deleteUser(user.id)"><i
+                                <a class="btn btn-danger" (click)="deleteWork(workLog.id)"><i
                                         class="icon_trash_alt"></i></a>
                             </div>
                         </td>
@@ -68,10 +74,71 @@
                 <tfoot>
                     <tr>
                         <th colspan="5">Total Time</th>
-                        <th>{{toTimeFormat(totalWorkTime)}}</th>
+                        <th>{{commonService.toTimeFormat(totalWorkTime)}}</th>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
 </div>
+
+<ng-template #workModal>
+    <div class="modal-header">
+        <button type="button" class="close" (click)="closeModal()" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Work</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form">
+            <div class="form-group">
+                <label for="name">User Name</label>
+                <select id="name" class="form-control m-bot15" [(ngModel)]="selectedUser">
+                    <option *ngFor="let user of users" value="{{user.id}}">{{user.name}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="name">Project Name</label>
+                <select id="name" class="form-control m-bot15" [(ngModel)]="selectedProject">
+                    <option *ngFor="let project of projects" value="{{project.id}}">{{project.name}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="startDateTime">Start Date Time</label>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <br>
+                        <input type="text" placeholder="Start Date" class="form-control" bsDatepicker>
+                    </div>
+                    <div class="col-lg-6">
+                        <timepicker [(ngModel)]="mytime"></timepicker>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name">End Date Time</label>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <br>
+                        <input type="text" placeholder="End Date" class="form-control" bsDatepicker>
+                    </div>
+                    <div class="col-lg-6">
+                        <timepicker [(ngModel)]="mytime"></timepicker>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="name">Remarks</label>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <br>
+                        <input type="text" placeholder="Remarks" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button (click)="closeModal()" class="btn btn-default" type="button">Close</button>
+        <button class="btn btn-success" type="button" (click)="editOrganization()">Save
+            changes</button>
+    </div>
+</ng-template>

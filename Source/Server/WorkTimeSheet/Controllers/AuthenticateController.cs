@@ -6,6 +6,7 @@ using System.Linq;
 using WorkTimeSheet.Authentication;
 using WorkTimeSheet.DbModels;
 using WorkTimeSheet.DTO;
+using WorkTimeSheet.Excepions;
 using WorkTimeSheet.Models;
 
 namespace WorkTimeSheet.Controllers
@@ -32,15 +33,15 @@ namespace WorkTimeSheet.Controllers
                 .ThenInclude(x => x.UserRole)
                 .FirstOrDefault(x => x.Email == userCredential.Email);
             if (user == null)
-                return Unauthorized();
+                throw new InvalidUserException("Invalid Email Id");
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(userCredential.Password, user.Salt);
             if (user.Password != hashedPassword)
-                return Unauthorized();
+                throw new InvalidUserException("Invalid Password");
 
             var authorizedUser = _authenticationManager.Authenticate(Mapper.Map<UserDTO>(user));
             if (authorizedUser == null)
-                return Unauthorized();
+                throw new InvalidUserException();
 
             return Ok(authorizedUser);
         }
@@ -52,7 +53,7 @@ namespace WorkTimeSheet.Controllers
         {
             var newAuthorizedUser = _tokenRefresher.Refresh(authorizedUser);
             if (newAuthorizedUser == null)
-                return Unauthorized();
+                throw new InvalidUserException();
 
             return Ok(newAuthorizedUser);
         }

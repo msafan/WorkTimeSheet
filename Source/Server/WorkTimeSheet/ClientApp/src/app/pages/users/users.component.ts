@@ -6,6 +6,7 @@ import { UserFilterModel } from 'src/app/models/user-filter-model';
 import { UserModel } from 'src/app/models/user-model';
 import { UserRole } from 'src/app/models/user-role';
 import { UserRoleSelection } from 'src/app/models/user-role-selection';
+import { CommonService } from 'src/app/services/common.service';
 import { UserService } from 'src/app/services/user.service';
 import { BaseComponent } from '../base-component';
 
@@ -22,8 +23,9 @@ export class UsersComponent extends BaseComponent implements OnInit {
   public userRolesSelection: UserRoleSelection[] = [];
   public userToEdit: UserModel = new UserModel();
 
-  constructor(globalSettings: GlobalSettings, private userService: UserService, private router: Router) {
-    super(globalSettings);
+  constructor(globalSettings: GlobalSettings, private userService: UserService,
+    private router: Router, commonService: CommonService) {
+    super(globalSettings, commonService);
   }
 
   ngOnInit() {

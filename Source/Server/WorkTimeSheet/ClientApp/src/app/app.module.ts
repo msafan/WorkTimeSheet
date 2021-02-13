@@ -2,13 +2,19 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 import { MomentModule } from 'ngx-moment';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
+import { NgxNotificationMsgModule } from './lib/NotificationMsgLibrary/ngx-notification-msg.module';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { LogoutComponent } from './pages/logout/logout.component';
@@ -49,7 +55,13 @@ import { UsersComponent } from './pages/users/users.component';
       { path: 'project/:id', component: ProjectComponent }
     ]),
     BrowserAnimationsModule,
-    ClipboardModule
+    ClipboardModule,
+    NgxNotificationMsgModule,
+    MatSelectModule,
+    AngularMultiSelectModule,
+    ModalModule.forRoot(),
+    BsDatepickerModule.forRoot(),
+    TimepickerModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

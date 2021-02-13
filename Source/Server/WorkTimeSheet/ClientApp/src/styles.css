@@ -17,3 +17,18 @@ code {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #394a59;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.wrapper{
+  padding-bottom: 60px;
+}

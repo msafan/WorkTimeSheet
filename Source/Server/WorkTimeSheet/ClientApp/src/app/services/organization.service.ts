@@ -23,8 +23,8 @@ export class OrganizationService extends BaseWebApiService {
     return this.post<OrganizationModel>(this.api + 'register', registrationModel);
   }
 
-  public getByUserId(id: number): Observable<OrganizationModel> {
-    return this.get<OrganizationModel>(this.api + id);
+  public getMyOrganization(): Observable<OrganizationModel> {
+    return this.get<OrganizationModel>(this.api + "myorganization");
   }
 
   public edit(id: number, organizationModel: OrganizationModel) {

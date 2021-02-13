@@ -5,14 +5,16 @@ import { CreateUserModel } from 'src/app/models/create-user-model';
 import { GlobalSettings } from 'src/app/models/global-settings';
 import { RegistrationModel } from 'src/app/models/registration-model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { CommonService } from 'src/app/services/common.service';
 import { OrganizationService } from 'src/app/services/organization.service';
+import { BaseComponent } from '../base-component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent extends BaseComponent implements OnInit {
 
   public isRegisterPage: boolean = false;
   public loginForm: FormGroup;
@@ -22,7 +24,10 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private formBuilder: FormBuilder,
-    private origanizationService: OrganizationService) { }
+    private origanizationService: OrganizationService,
+    commonService: CommonService) {
+    super(globalSettings, commonService);
+  }
 
   ngOnInit() {
     this.resetLoginForm();
@@ -42,7 +47,7 @@ export class LoginComponent implements OnInit {
         this.globalSettings.authorizedUser = result;
         this.router.navigate(['/dashboard']);
       }, error => {
-
+        this.showException('Login Failed', error);
       });
   }
 
@@ -64,8 +69,9 @@ export class LoginComponent implements OnInit {
       .subscribe(response => {
         this.isRegisterPage = false;
         this.resetRegisterForm();
+        this.showSuccess('Registration completed', 'Successfully registered user and origanization');
       }, error => {
-
+        this.showException('Error', error);
       });
   }
 

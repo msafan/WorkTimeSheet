@@ -28,23 +28,30 @@ namespace WorkTimeSheet.Controllers
                 .Where(x => x.User.OrganizationId == CurrentUser.OrganizationId);
 
             if (filterModel.Names != null)
-                foreach (var filterName in filterModel.Names)
-                    query = query.Where(x => x.User.Name.Contains(filterName));
+                query = query.Where(x => filterModel.Names.Any(y => x.User.Name.Contains(y)));
             if (filterModel.ProjectNames != null)
-                foreach (var projectName in filterModel.ProjectNames)
-                    query = query.Where(x => x.Project.Name.Contains(projectName));
+                query = query.Where(x => filterModel.ProjectNames.Any(y => x.Project.Name.Contains(y)));
+
+            filterModel.EndDate = filterModel.EndDate.Value.AddDays(1);
 
             if (filterModel.StartDate != null)
                 query = query.Where(x => x.StartDateTime >= filterModel.StartDate);
             if (filterModel.EndDate != null)
-                query = query.Where(x => x.StartDateTime <= filterModel.EndDate);
+                query = query.Where(x => x.EndDateTime <= filterModel.EndDate);
 
             if (filterModel.UserIds != null)
-                foreach (var userId in filterModel.UserIds)
-                    query = query.Where(x => x.UserId == userId);
+                query = query.Where(x => filterModel.UserIds.Contains(x.UserId));
             if (filterModel.ProjectIds != null)
-                foreach (var projectId in filterModel.ProjectIds)
-                    query = query.Where(x => x.ProjectId == projectId);
+                query = query.Where(x => filterModel.ProjectIds.Contains(x.ProjectId));
+
+            var isOwner = DbContext.UserRoleMappings.Any(x => x.UserId == CurrentUser.Id && x.UserRoleId == 1);
+            if (!isOwner)
+            {
+                var projectsIds = DbContext.ProjectMembers.Where(x => x.UserId == CurrentUser.Id).Select(x => x.ProjectId);
+                query = query.Where(x => projectsIds.Contains(x.ProjectId));
+            }
+
+            query = query.OrderByDescending(x => x.StartDateTime).AsQueryable();
 
             var totalTimeInSeconds = query.Sum(x => x.TimeInSeconds);
             query = Paginate(query, pagination, out var paginationToReturn);

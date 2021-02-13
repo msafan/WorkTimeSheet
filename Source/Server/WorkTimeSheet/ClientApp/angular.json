@@ -28,7 +28,9 @@
               "src/assets/css/font-awesome.css",
               "src/assets/css/style.css",
               "src/assets/css/style-responsive.css",
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/angular2-multiselect-dropdown/themes/default.theme.css",
+			  "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css"
             ],
             "scripts": [
               "src/assets/js/jquery.js",

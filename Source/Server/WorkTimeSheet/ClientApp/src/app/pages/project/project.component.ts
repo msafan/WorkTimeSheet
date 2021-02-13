@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { UserManager } from 'oidc-client';
+import { ActivatedRoute } from '@angular/router';
 import { GlobalSettings } from 'src/app/models/global-settings';
 import { ProjectModel } from 'src/app/models/project-model';
 import { UserModel } from 'src/app/models/user-model';
+import { CommonService } from 'src/app/services/common.service';
 import { NavigationService } from 'src/app/services/navigation.service';
 import { ProjectService } from 'src/app/services/project.service';
 import { UserService } from 'src/app/services/user.service';
@@ -23,10 +23,10 @@ export class ProjectComponent extends BaseComponent implements OnInit {
   public availableUsers: UserModel[] = [];
   public leftList: number[] = [];
   public rightList: number[] = [];
-  constructor(globalSettings: GlobalSettings, private route: ActivatedRoute, 
-    private projectService: ProjectService, private navigationService: NavigationService, 
-    private userService: UserService) {
-    super(globalSettings)
+  constructor(private globalSettings: GlobalSettings, private route: ActivatedRoute,
+    private projectService: ProjectService, private navigationService: NavigationService,
+    private userService: UserService, commonService: CommonService) {
+    super(globalSettings, commonService);
   }
 
   ngOnInit(): void {
@@ -40,6 +40,7 @@ export class ProjectComponent extends BaseComponent implements OnInit {
 
       this.fetchProjectMembers();
     }, error => {
+      this.showException('Error', error);
       this.navigationService.back();
     });
   }
@@ -51,7 +52,7 @@ export class ProjectComponent extends BaseComponent implements OnInit {
         this.project = project;
         this.projectToEdit = JSON.parse(JSON.stringify(project));
       }, error => {
-
+        this.showException('Error', error);
       });
   }
 
@@ -61,7 +62,7 @@ export class ProjectComponent extends BaseComponent implements OnInit {
       this.selectedUsers = this.allUsers.filter(x => this.members.filter(y => y.id == x.id).length > 0);
       this.availableUsers = this.allUsers.filter(x => this.members.filter(y => y.id == x.id).length <= 0);
     }, error => {
-
+      this.showException('Error', error);
     });
   }
 
@@ -69,9 +70,8 @@ export class ProjectComponent extends BaseComponent implements OnInit {
     this.projectService.updateMembers(this.project.id, this.selectedUsers.map(x => x.id)).subscribe(result => {
       this.fetchProjectMembers();
     }, error => {
-
+      this.showException('Error', error);
     });
-
   }
 
   public addUser(): void {
@@ -83,7 +83,7 @@ export class ProjectComponent extends BaseComponent implements OnInit {
   }
 
   public removeUser(): void {
-    this.rightList = this.rightList.map(x => Number(x));
+    this.rightList = this.rightList.map(x => Number(x)).filter(x => x != this.globalSettings.authorizedUser.userId);
     const selectedItems = this.selectedUsers.filter(x => this.rightList.indexOf(x.id) >= 0);
     selectedItems.forEach(x => this.availableUsers.push(x));
     this.selectedUsers = this.selectedUsers.filter(x => this.rightList.indexOf(x.id) < 0);
@@ -94,6 +94,7 @@ export class ProjectComponent extends BaseComponent implements OnInit {
     this.projectService.getAllMembers(this.project.id).subscribe(response => {
       this.members = response.items;
     }, error => {
+      this.showException('Error', error);
       this.navigationService.back();
     });
   }

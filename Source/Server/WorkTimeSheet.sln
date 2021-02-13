@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkTimeSheet", "WorkTimeSheet\WorkTimeSheet.csproj", "{F0B60A0D-1810-4775-8D07-20A28707A078}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkTimeSheet", "WorkTimeSheet\WorkTimeSheet.csproj", "{F0B60A0D-1810-4775-8D07-20A28707A078}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

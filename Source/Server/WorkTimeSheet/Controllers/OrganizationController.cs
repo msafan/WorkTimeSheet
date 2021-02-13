@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WorkTimeSheet.DbModels;
 using WorkTimeSheet.DTO;
+using WorkTimeSheet.Excepions;
 using WorkTimeSheet.Models;
 
 namespace WorkTimeSheet.Controllers
@@ -25,13 +26,14 @@ namespace WorkTimeSheet.Controllers
         //    return Ok(Mapper.Map<IEnumerable<OrganizationDTO>>(organizations));
         //}
 
-        [HttpGet("{id}")]
+        [HttpGet("myorganization")]
         [ProducesDefaultResponseType(typeof(OrganizationDTO))]
-        public IActionResult GetByUserId(int id)
+        public IActionResult GetMyOrganization()
         {
             var organization = DbContext.Organizations.Include(x => x.Users).Include(x => x.Projects).FirstOrDefault(x => x.Id == CurrentUser.OrganizationId);
             if (organization == null)
-                return NotFound();
+                throw new DataNotFoundException($"No Organization found");
+
             return Ok(Mapper.Map<OrganizationDTO>(organization));
         }
 
@@ -86,7 +88,7 @@ namespace WorkTimeSheet.Controllers
         {
             var organization = DbContext.Organizations.Where(x => x.Id == CurrentUser.OrganizationId).FirstOrDefault(x => x.Id == id);
             if (organization == null)
-                return NotFound();
+                throw new DataNotFoundException($"Organization with Id = {id}, is not accessible for current user");
 
             organization.Name = updateModel.Name;
             organization.Description = updateModel.Description;
@@ -104,7 +106,7 @@ namespace WorkTimeSheet.Controllers
                 .Include(x => x.Projects)
                 .Where(x => x.Id == CurrentUser.OrganizationId).FirstOrDefault(x => x.Id == id);
             if (organization == null)
-                return NotFound();
+                throw new DataNotFoundException($"Organization with Id = {id}, is not accessible for current user");
 
             var users = DbContext.Users.Where(x => x.OrganizationId == organization.Id).ToList();
             if (users != null && users.Any())
