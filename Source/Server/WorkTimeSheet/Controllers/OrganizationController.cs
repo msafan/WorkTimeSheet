@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WorkTimeSheet.DbModels;
@@ -51,7 +52,7 @@ namespace WorkTimeSheet.Controllers
         [ProducesDefaultResponseType(typeof(OrganizationDTO))]
         public IActionResult Register([FromBody] OrganizationRegistrationModel registrationModel)
         {
-            var ownerRole = DbContext.UserRoles.FirstOrDefault(x => x.Role == "Owner");
+            var ownerRole = DbContext.UserRoles.FirstOrDefault(x => x.Role == Constants.UserRoleOwner);
             var password = PasswordProtector.Create(registrationModel.User.Password);
             var organization = new Organization
             {
@@ -92,6 +93,7 @@ namespace WorkTimeSheet.Controllers
 
             organization.Name = updateModel.Name;
             organization.Description = updateModel.Description;
+            
             DbContext.Organizations.Update(organization);
             DbContext.SaveChanges();
 

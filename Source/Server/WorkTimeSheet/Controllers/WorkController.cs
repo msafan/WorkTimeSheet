@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using WorkTimeSheet.DbModels;
 using WorkTimeSheet.DTO;
+using WorkTimeSheet.Excepions;
 
 namespace WorkTimeSheet.Controllers
 {
@@ -20,7 +21,7 @@ namespace WorkTimeSheet.Controllers
         {
             var work = DbContext.CurrentWorks.Include(x => x.User).FirstOrDefault(x => x.User.Id == CurrentUser.Id);
             if (work == null)
-                return NotFound();
+                throw new DataNotFoundException($"No work found with user id: {CurrentUser.Id}");
 
             return Ok(Mapper.Map<CurrentWorkDTO>(work));
         }
@@ -30,18 +31,18 @@ namespace WorkTimeSheet.Controllers
         {
             var work = DbContext.CurrentWorks.FirstOrDefault(x => x.UserId == CurrentUser.Id);
             if (work == null)
-                return NotFound();
+                throw new DataNotFoundException($"No work found with user id: {CurrentUser.Id}");
+
+            if (work.ProjectId != null)
+                throw new InternalServerException($"User: ({CurrentUser.Name}) is already working on some other project");
 
             var project = DbContext.Projects.FirstOrDefault(x => x.Id == projectId && x.OrganizationId == CurrentUser.OrganizationId);
             if (project == null)
-                return NotFound();
+                throw new DataNotFoundException($"No project found with user id: {projectId}");
 
             var member = DbContext.ProjectMembers.FirstOrDefault(x => x.UserId == CurrentUser.Id && x.ProjectId == project.Id);
             if (member == null)
-                return NotFound();
-
-            if (work.ProjectId != null)
-                return BadRequest();
+                throw new DataNotFoundException($"User: ({CurrentUser.Name}) is not associated with project: ({project.Name})");
 
             work.ProjectId = project.Id;
             work.StartDateTime = DateTime.UtcNow;
@@ -57,18 +58,18 @@ namespace WorkTimeSheet.Controllers
         {
             var work = DbContext.CurrentWorks.FirstOrDefault(x => x.UserId == CurrentUser.Id);
             if (work == null)
-                return NotFound();
+                throw new DataNotFoundException($"No work found with user id: {CurrentUser.Id}");
+
+            if (work.ProjectId == null)
+                throw new InternalServerException($"User: ({CurrentUser.Name}) is not working on any projects");
 
             var project = DbContext.Projects.FirstOrDefault(x => x.Id == work.ProjectId && x.OrganizationId == CurrentUser.OrganizationId);
             if (project == null)
-                return NotFound();
+                throw new DataNotFoundException($"No project found with project id: {work.ProjectId}");
 
             var member = DbContext.ProjectMembers.FirstOrDefault(x => x.UserId == CurrentUser.Id && x.ProjectId == project.Id);
             if (member == null)
-                return NotFound();
-
-            if (work.ProjectId == null)
-                return BadRequest();
+                throw new DataNotFoundException($"User: ({CurrentUser.Name}) is not associated with project: ({project.Name})");
 
             DbContext.WorkLogs.Add(new WorkLog
             {

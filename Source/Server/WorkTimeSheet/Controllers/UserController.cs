@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WorkTimeSheet.DbModels;
 using WorkTimeSheet.DTO;
+using WorkTimeSheet.Excepions;
 using WorkTimeSheet.Models;
 
 namespace WorkTimeSheet.Controllers
@@ -58,7 +59,7 @@ namespace WorkTimeSheet.Controllers
                 .ThenInclude(x => x.UserRole)
                 .FirstOrDefault(x => x.Id == id);
             if (user == null)
-                return NotFound();
+                throw new DataNotFoundException($"No user found on Id: {id}");
 
             return Ok(Mapper.Map<UserDTO>(user));
         }
@@ -97,7 +98,7 @@ namespace WorkTimeSheet.Controllers
                 .FirstOrDefault(x => x.Id == id);
 
             if (user == null)
-                return NotFound();
+                throw new DataNotFoundException($"No user found on Id: {id}");
 
             user.Name = userDTO.Name;
             user.Email = userDTO.Email;
@@ -128,7 +129,7 @@ namespace WorkTimeSheet.Controllers
                 .Where(x => x.OrganizationId == CurrentUser.OrganizationId)
                 .FirstOrDefault(x => x.Id == id);
             if (user == null)
-                return NotFound();
+                throw new DataNotFoundException($"No user found on Id: {id}");
 
             var currentWork = DbContext.CurrentWorks.FirstOrDefault(x => x.UserId == user.Id);
             if (currentWork != null)

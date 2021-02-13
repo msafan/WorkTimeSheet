@@ -22,6 +22,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         protected IDbContext DbContext { get; }
+
         protected IMapper Mapper { get; }
 
         protected User CurrentUser

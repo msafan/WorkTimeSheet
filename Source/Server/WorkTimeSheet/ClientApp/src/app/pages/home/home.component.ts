@@ -48,7 +48,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
       this.showSuccess('Work Started', 'Work started on ' + this.projects.filter(x => x.id == this.selectedProject)[0].name);
       this.getWorkStatus();
     }, error => {
-      this.showError('Cannot start work', 'Work might have already been started in different instance');
+      this.showException('Error', error);
       this.getWorkStatus();
     });
   }
@@ -62,7 +62,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
       this.showSuccess('Work stopped', 'Work stopped on ' + this.projects.filter(x => x.id == this.selectedProject)[0].name);
       this.getWorkStatus();
     }, error => {
-      this.showError('Cannot stop work', 'Work might have already been stopped in different instance')
+      this.showException('Error', error);
       this.getWorkStatus();
     });
   }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WorkTimeSheet.DbModels;
 using WorkTimeSheet.DTO;
+using WorkTimeSheet.Excepions;
 using WorkTimeSheet.Models;
 
 namespace WorkTimeSheet.Controllers
@@ -93,7 +94,7 @@ namespace WorkTimeSheet.Controllers
             var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
                 .FirstOrDefault(x => x.Id == id);
             if (project == null)
-                return NotFound();
+                throw new DataNotFoundException($"No project found on Id: {id}");
 
             return Ok(Mapper.Map<ProjectDTO>(project));
         }
@@ -124,7 +125,7 @@ namespace WorkTimeSheet.Controllers
                 .FirstOrDefault(x => x.Id == id);
 
             if (project == null)
-                return NotFound();
+                throw new DataNotFoundException($"No project found on Id: {id}");
 
             var existingusers = DbContext.ProjectMembers.Where(x => x.ProjectId == id).Select(x => x.UserId).ToList();
             var newUsers = userIds.Except(existingusers);
@@ -142,7 +143,7 @@ namespace WorkTimeSheet.Controllers
                 .FirstOrDefault(x => x.Id == id);
 
             if (project == null)
-                return NotFound();
+                throw new DataNotFoundException($"No project found on Id: {id}");
 
             var projectMembers = DbContext.ProjectMembers.Where(x => x.ProjectId == id).Where(x => userIds.Contains(x.UserId)).ToList();
 
@@ -159,7 +160,7 @@ namespace WorkTimeSheet.Controllers
                .FirstOrDefault(x => x.Id == id);
 
             if (project == null)
-                return NotFound();
+                throw new DataNotFoundException($"No project found on Id: {id}");
 
             var existingusers = DbContext.ProjectMembers.Where(x => x.ProjectId == id).Select(x => x.UserId).ToList();
             var newUsers = userIds.Except(existingusers);
@@ -182,7 +183,7 @@ namespace WorkTimeSheet.Controllers
                 .FirstOrDefault(x => x.Id == id);
 
             if (project == null)
-                return NotFound();
+                throw new DataNotFoundException($"No project found on Id: {id}");
 
             project.Name = projectDTO.Name;
             project.Description = projectDTO.Description;
@@ -206,7 +207,7 @@ namespace WorkTimeSheet.Controllers
                 .Where(x => x.OrganizationId == CurrentUser.OrganizationId)
                 .FirstOrDefault(x => x.Id == id);
             if (project == null)
-                return NotFound();
+                throw new DataNotFoundException($"No project found on Id: {id}");
 
             //var currentWorks = DbContext.CurrentWorks.Where(x => x.ProjectId == project.Id).ToList();
             //if (currentWorks != null && currentWorks.Any())

@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using WorkTimeSheet.DbModels;
 using WorkTimeSheet.DTO;
+using WorkTimeSheet.Excepions;
 using WorkTimeSheet.Models;
 
 namespace WorkTimeSheet.Controllers
@@ -76,7 +77,7 @@ namespace WorkTimeSheet.Controllers
                 .Where(x => x.User.OrganizationId == CurrentUser.OrganizationId)
                 .FirstOrDefault(x => x.Id == id);
             if (workLog == null)
-                return NotFound();
+                throw new DataNotFoundException($"No work found with work id: {id}");
 
             return Ok(Mapper.Map<WorkLogDTO>(workLog));
         }
@@ -112,7 +113,7 @@ namespace WorkTimeSheet.Controllers
                 .FirstOrDefault(x => x.Id == id);
 
             if (workLog == null)
-                return NotFound();
+                throw new DataNotFoundException($"No work found with work id: {id}");
 
             workLog.EndDateTime = workLogDTO.EndDateTime;
             workLog.ProjectId = workLogDTO.ProjectId;
@@ -139,7 +140,7 @@ namespace WorkTimeSheet.Controllers
                 .Where(x => x.User.OrganizationId == CurrentUser.OrganizationId)
                 .FirstOrDefault(x => x.Id == id);
             if (workLog == null)
-                return NotFound();
+                throw new DataNotFoundException($"No work found with work id: {id}");
 
             DbContext.WorkLogs.Remove(workLog);
             DbContext.SaveChanges();
