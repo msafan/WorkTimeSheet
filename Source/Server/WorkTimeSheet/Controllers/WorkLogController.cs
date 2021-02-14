@@ -84,15 +84,36 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult Post([FromBody] WorkLogDTO workLogDTO)
         {
+            var project = DbContext.Projects.FirstOrDefault(x => x.Id == workLogDTO.ProjectId && x.OrganizationId == CurrentUser.OrganizationId);
+            if (project == null)
+                throw new DataNotFoundException($"Project with id: {workLogDTO.ProjectId} not found");
+
+            var user = DbContext.Users.FirstOrDefault(x => x.Id == workLogDTO.UserId && x.OrganizationId == CurrentUser.OrganizationId);
+            if (user == null)
+                throw new DataNotFoundException($"User with id: {workLogDTO.UserId} not found");
+
+            var userRoles = DbContext.UserRoleMappings.Include(x => x.UserRole).Where(x => x.UserId == CurrentUser.Id).Select(x => x.UserRole.Role).ToList();
+            if (!userRoles.Contains(Constants.UserRoleOwner) && userRoles.Contains(Constants.UserRoleProjectManager))
+            {
+                var partOfProject = DbContext.ProjectMembers.Any(x => x.ProjectId == project.Id && x.UserId == CurrentUser.Id);
+                if (!partOfProject)
+                    throw new ForbiddenException("User not authorized to perform this operation");
+            }
+
+            if (workLogDTO.EndDateTime <= workLogDTO.StartDateTime)
+                throw new InternalServerException("End date should be ahead than start date");
+
             var workLog = new WorkLog
             {
                 EndDateTime = workLogDTO.EndDateTime,
                 ProjectId = workLogDTO.ProjectId,
                 Remarks = workLogDTO.Remarks,
                 StartDateTime = workLogDTO.StartDateTime,
-                UserId = workLogDTO.UserId
+                UserId = workLogDTO.UserId,
+                TimeInSeconds = (long)(workLogDTO.EndDateTime - workLogDTO.StartDateTime).TotalSeconds
             };
             workLog.TimeInSeconds = (int)(workLog.EndDateTime - workLog.StartDateTime).TotalSeconds;
 
@@ -109,6 +130,25 @@ namespace WorkTimeSheet.Controllers
         [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult Put(int id, [FromBody] WorkLogDTO workLogDTO)
         {
+            var project = DbContext.Projects.FirstOrDefault(x => x.Id == workLogDTO.ProjectId && x.OrganizationId == CurrentUser.OrganizationId);
+            if (project == null)
+                throw new DataNotFoundException($"Project with id: {workLogDTO.ProjectId} not found");
+
+            var user = DbContext.Users.FirstOrDefault(x => x.Id == workLogDTO.UserId && x.OrganizationId == CurrentUser.OrganizationId);
+            if (user == null)
+                throw new DataNotFoundException($"User with id: {workLogDTO.UserId} not found");
+
+            var userRoles = DbContext.UserRoleMappings.Include(x => x.UserRole).Where(x => x.UserId == CurrentUser.Id).Select(x => x.UserRole.Role).ToList();
+            if (!userRoles.Contains(Constants.UserRoleOwner) && userRoles.Contains(Constants.UserRoleProjectManager))
+            {
+                var partOfProject = DbContext.ProjectMembers.Any(x => x.ProjectId == project.Id && x.UserId == CurrentUser.Id);
+                if (!partOfProject)
+                    throw new ForbiddenException("User not authorized to perform this operation");
+            }
+
+            if (workLogDTO.EndDateTime <= workLogDTO.StartDateTime)
+                throw new InternalServerException("End date should be ahead than start date");
+
             var workLog = DbContext.WorkLogs
                 .Include(x => x.User)
                 .Where(x => x.User.OrganizationId == CurrentUser.OrganizationId)
@@ -122,6 +162,7 @@ namespace WorkTimeSheet.Controllers
             workLog.Remarks = workLogDTO.Remarks;
             workLog.StartDateTime = workLogDTO.StartDateTime;
             workLog.UserId = workLogDTO.UserId;
+            workLog.TimeInSeconds = (long)(workLogDTO.EndDateTime - workLogDTO.StartDateTime).TotalSeconds;
 
             DbContext.WorkLogs.Update(workLog);
             DbContext.SaveChanges();

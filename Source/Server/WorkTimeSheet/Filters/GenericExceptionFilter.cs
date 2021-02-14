@@ -32,6 +32,11 @@ namespace WorkTimeSheet.Filters
                 errorMessage.Message = string.IsNullOrEmpty(securityTokenException.Message) ? "Invalid User" : securityTokenException.Message;
                 context.HttpContext.Response.StatusCode = 401;
             }
+            catch (ForbiddenException forbiddenException)
+            {
+                errorMessage.Message = string.IsNullOrEmpty(forbiddenException.Message) ? "Access forbidden" : forbiddenException.Message;
+                context.HttpContext.Response.StatusCode = 403;
+            }
             catch (DataNotFoundException dataNotFoundException)
             {
                 errorMessage.Message = string.IsNullOrEmpty(dataNotFoundException.Message) ? "Not able to fetch required data" : dataNotFoundException.Message;
