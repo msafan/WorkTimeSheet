@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using WorkTimeSheet.Authentication;
 using WorkTimeSheet.DbModels;
@@ -12,6 +13,7 @@ using WorkTimeSheet.Models;
 namespace WorkTimeSheet.Controllers
 {
     [Route("api/authenticate")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class AuthenticateController : ApiControllerBase
     {
         private readonly IJwtAuthenticationManager _authenticationManager;
@@ -33,15 +35,15 @@ namespace WorkTimeSheet.Controllers
                 .ThenInclude(x => x.UserRole)
                 .FirstOrDefault(x => x.Email == userCredential.Email);
             if (user == null)
-                throw new InvalidUserException("Invalid Email Id");
+                throw new UnauthorizedAccessException("Invalid Email Id");
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(userCredential.Password, user.Salt);
             if (user.Password != hashedPassword)
-                throw new InvalidUserException("Invalid Password");
+                throw new UnauthorizedAccessException("Invalid Password");
 
             var authorizedUser = _authenticationManager.Authenticate(Mapper.Map<UserDTO>(user));
             if (authorizedUser == null)
-                throw new InvalidUserException();
+                throw new UnauthorizedAccessException();
 
             return Ok(authorizedUser);
         }
@@ -53,7 +55,7 @@ namespace WorkTimeSheet.Controllers
         {
             var newAuthorizedUser = _tokenRefresher.Refresh(authorizedUser);
             if (newAuthorizedUser == null)
-                throw new InvalidUserException();
+                throw new UnauthorizedAccessException();
 
             return Ok(newAuthorizedUser);
         }

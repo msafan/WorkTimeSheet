@@ -14,6 +14,7 @@ namespace WorkTimeSheet
         {
             CreateMap<Organization, OrganizationDTO>();
             CreateMap<Project, ProjectDTO>();
+            CreateMap<AccessToken, AccessTokenDTO>();
             CreateMap<User, UserDTO>()
                 .ForMember(x => x.UserRoles, option => option.MapFrom(obj => obj.UserRoleMappings.Select(x => x.UserRole).ToList())
             );

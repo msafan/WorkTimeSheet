@@ -30,7 +30,7 @@ export class ReportComponent extends BaseComponent implements OnInit {
 
   constructor(private workLogService: WorkLogService, private globalSettings: GlobalSettings,
     private projectService: ProjectService, private userService: UserService,
-    commonService: CommonService) {
+    public commonService: CommonService) {
     super(globalSettings, commonService);
 
     this.dateRange = [

@@ -6,6 +6,6 @@ namespace WorkTimeSheet
 {
     public interface IJwtAuthenticationManager
     {
-        AuthorizedUser Authenticate(UserDTO user, bool isRefreshTokenRequired = true, DateTime? accessTokenExpiryDate = null);
+        AuthorizedUser Authenticate(UserDTO user);
     }
 }

@@ -17,9 +17,14 @@ namespace WorkTimeSheet.Filters
             {
                 throw context.Exception;
             }
-            catch (InvalidUserException invalidUserException)
+            catch (InvalidOperationException invalidOperationException)
             {
-                errorMessage.Message = string.IsNullOrEmpty(invalidUserException.Message) ? "Invalid User" : invalidUserException.Message;
+                errorMessage.Message = string.IsNullOrEmpty(invalidOperationException.Message) ? "Bad Request" : invalidOperationException.Message;
+                context.HttpContext.Response.StatusCode = 400;
+            }
+            catch (UnauthorizedAccessException unauthorizedAccessException)
+            {
+                errorMessage.Message = string.IsNullOrEmpty(unauthorizedAccessException.Message) ? "Invalid User" : unauthorizedAccessException.Message;
                 context.HttpContext.Response.StatusCode = 401;
             }
             catch (SecurityTokenException securityTokenException)

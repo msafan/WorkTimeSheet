@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,10 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Text;
 using WorkTimeSheet.Authentication;
 using WorkTimeSheet.DbModels;
 
@@ -40,8 +39,8 @@ namespace WorkTimeSheet
                 // add JWT Authentication
                 var securityScheme = new OpenApiSecurityScheme
                 {
-                    Name = "JWT Authentication",
-                    Description = "Enter JWT Bearer token **_only_**",
+                    Name = "Access Token",
+                    Description = "Enter JWT Bearer token or Api Key",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
                     Scheme = "bearer", // must be lower case
@@ -59,42 +58,25 @@ namespace WorkTimeSheet
                 });
             });
 
-            var key = "123456789qwertyuiop!@#$%^&*()";
-
             services.AddDbContext<IDbContext, WorkTimeSheetContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("defaultConnectionString")));
 
-            services.AddTransient<IRefreshTokenGenerator, RefreshTokenGenerator>();
             services.AddTransient<IJwtAuthenticationManager, JwtAuthenticationManager>(serviceProvider =>
             {
-                return new JwtAuthenticationManager(serviceProvider.GetService<IDbContext>(),
-                    serviceProvider.GetService<IRefreshTokenGenerator>(),
-                    Encoding.ASCII.GetBytes(key));
+                return new JwtAuthenticationManager(serviceProvider.GetService<IDbContext>());
             });
             services.AddTransient<ITokenRefresher, TokenRefresher>(serviceProvider =>
             {
                 return new TokenRefresher(serviceProvider.GetService<IDbContext>(),
                     serviceProvider.GetService<IJwtAuthenticationManager>(),
-                    Encoding.ASCII.GetBytes(key),
                     serviceProvider.GetService<IMapper>());
             });
 
-            services.AddAuthentication(x =>
+            services.AddAuthentication(options =>
             {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                options.DefaultAuthenticateScheme = HybridTokenAuthenticationSchemeOptions.DefaultScheme;
+                options.DefaultChallengeScheme = HybridTokenAuthenticationSchemeOptions.DefaultScheme;
+            }).AddApiKeySupport(options => { });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
@@ -121,7 +103,7 @@ namespace WorkTimeSheet
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/WorkTimeSheet/swagger/v1/swagger.json", "My API v1"));
 
             app.UseAuthentication();
             app.UseRouting();
@@ -134,12 +116,14 @@ namespace WorkTimeSheet
                     defaults: new { id = System.Web.Http.RouteParameter.Optional });
             });
 
+            app.UsePathBase("/WorkTimeSheet/");
+
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
-                spa.Options.SourcePath = "ClientApp";
+                spa.Options.SourcePath = "ClientApp/WorkTimeSheet";
 
                 if (env.IsDevelopment())
                 {

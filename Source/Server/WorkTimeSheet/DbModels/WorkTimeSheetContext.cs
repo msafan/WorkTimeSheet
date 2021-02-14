@@ -24,6 +24,7 @@ namespace WorkTimeSheet.DbModels
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<UserRoleMapping> UserRoleMappings { get; set; }
         public virtual DbSet<WorkLog> WorkLogs { get; set; }
+        public virtual DbSet<AccessToken> AccessTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -246,6 +247,34 @@ namespace WorkTimeSheet.DbModels
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_WorkLog_User");
+            });
+
+            modelBuilder.Entity<AccessToken>(entity =>
+            {
+                entity.ToTable("AccessToken");
+
+                entity.HasIndex(e => new { e.UserId, e.AppName }, "UK_AccessToken_User_AppName")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.UserId).HasColumnName("FK_ID_User");
+
+                entity.Property(e => e.AppName)
+                   .IsRequired()
+                   .HasMaxLength(100)
+                   .IsUnicode(false);
+
+                entity.Property(e => e.ApiKey)
+                   .IsRequired()
+                   .HasMaxLength(50)
+                   .IsUnicode(false);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AccessTokens)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AccessToken_User");
             });
 
             OnModelCreatingPartial(modelBuilder);

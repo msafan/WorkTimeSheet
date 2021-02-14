@@ -13,14 +13,12 @@ namespace WorkTimeSheet.Authentication
     {
         private readonly IDbContext _dbContext;
         private readonly IJwtAuthenticationManager _authenticationManager;
-        private readonly byte[] _key;
         private readonly IMapper _mapper;
 
-        public TokenRefresher(IDbContext dbContext, IJwtAuthenticationManager authenticationManager, byte[] key, IMapper mapper)
+        public TokenRefresher(IDbContext dbContext, IJwtAuthenticationManager authenticationManager, IMapper mapper)
         {
             _dbContext = dbContext;
             _authenticationManager = authenticationManager;
-            _key = key;
             _mapper = mapper;
         }
 
@@ -31,7 +29,7 @@ namespace WorkTimeSheet.Authentication
             var pricipal = tokenHandler.ValidateToken(authorizedUser.AccessToken, new Microsoft.IdentityModel.Tokens.TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(_key),
+                IssuerSigningKey = new SymmetricSecurityKey(Constants.JwtTokenKey),
                 ValidateIssuer = false,
                 ValidateAudience = false,
                 ValidateLifetime = false,

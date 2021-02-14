@@ -15,6 +15,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { NgxNotificationMsgModule } from './lib/NotificationMsgLibrary/ngx-notification-msg.module';
+import { AccessTokensComponent } from './pages/access-tokens/access-tokens.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { LogoutComponent } from './pages/logout/logout.component';
@@ -37,6 +38,7 @@ import { UsersComponent } from './pages/users/users.component';
     ReportComponent,
     ProjectComponent,
     ProfileComponent,
+    AccessTokensComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -52,6 +54,7 @@ import { UsersComponent } from './pages/users/users.component';
       { path: 'organization', component: OrganiztionComponent },
       { path: 'report', component: ReportComponent },
       { path: 'profile', component: ProfileComponent },
+      { path: 'accessTokens', component: AccessTokensComponent },
       { path: 'project/:id', component: ProjectComponent }
     ]),
     BrowserAnimationsModule,

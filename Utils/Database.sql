@@ -108,6 +108,17 @@ Create table [dbo].[RefreshToken]
 	constraint [PK_Refreshoken_ID] primary key clustered ([ID] asc),
 )
 
+create table [dbo].[AccessToken]
+(
+	[ID] [int] identity(1,1) not null,
+	[FK_ID_User] [int] not null,
+	[AppName] [varchar](100) not null,
+	[ApiKey] [varchar](50) not null,
+	constraint [PK_AccessToken_ID] primary key clustered ([ID] asc),
+	constraint [UK_AccessToken_User_AppName] unique nonclustered([FK_ID_User] asc, [AppName] asc),
+	constraint [FK_AccessToken_User] foreign key ([FK_ID_User]) references [dbo].[User] ([ID])
+)
+
 -------------------------------------------Indexes------------------------------------------------------------------------------------------------------
 
 use [WorkTimeSheet]

@@ -34,7 +34,7 @@ namespace WorkTimeSheet.Controllers
                 throw new DataNotFoundException($"No work found with user id: {CurrentUser.Id}");
 
             if (work.ProjectId != null)
-                throw new InternalServerException($"User: ({CurrentUser.Name}) is already working on some other project");
+                throw new InvalidOperationException($"User: ({CurrentUser.Name}) is already working on some other project");
 
             var project = DbContext.Projects.FirstOrDefault(x => x.Id == projectId && x.OrganizationId == CurrentUser.OrganizationId);
             if (project == null)
@@ -61,7 +61,7 @@ namespace WorkTimeSheet.Controllers
                 throw new DataNotFoundException($"No work found with user id: {CurrentUser.Id}");
 
             if (work.ProjectId == null)
-                throw new InternalServerException($"User: ({CurrentUser.Name}) is not working on any projects");
+                throw new InvalidOperationException($"User: ({CurrentUser.Name}) is not working on any projects");
 
             var project = DbContext.Projects.FirstOrDefault(x => x.Id == work.ProjectId && x.OrganizationId == CurrentUser.OrganizationId);
             if (project == null)

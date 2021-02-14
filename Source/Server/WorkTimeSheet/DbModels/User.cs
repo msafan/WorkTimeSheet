@@ -12,6 +12,7 @@ namespace WorkTimeSheet.DbModels
             ProjectMembers = new HashSet<ProjectMember>();
             UserRoleMappings = new HashSet<UserRoleMapping>();
             WorkLogs = new HashSet<WorkLog>();
+            AccessTokens = new HashSet<AccessToken>();
         }
 
         public int Id { get; set; }
@@ -26,5 +27,6 @@ namespace WorkTimeSheet.DbModels
         public virtual ICollection<ProjectMember> ProjectMembers { get; set; }
         public virtual ICollection<UserRoleMapping> UserRoleMappings { get; set; }
         public virtual ICollection<WorkLog> WorkLogs { get; set; }
+        public virtual ICollection<AccessToken> AccessTokens { get; set; }
     }
 }

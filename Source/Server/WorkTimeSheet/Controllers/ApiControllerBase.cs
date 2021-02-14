@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using WorkTimeSheet.DbModels;
-using WorkTimeSheet.Excepions;
 using WorkTimeSheet.Filters;
 using WorkTimeSheet.Models;
 
@@ -32,7 +31,7 @@ namespace WorkTimeSheet.Controllers
                 var userId = string.IsNullOrEmpty(User.Identity.Name) ? -1 : int.Parse(User.Identity.Name);
                 var user = DbContext.Users.FirstOrDefault(x => x.Id == userId);
                 if (user == null)
-                    throw new InvalidUserException();
+                    throw new UnauthorizedAccessException();
 
                 return user;
             }

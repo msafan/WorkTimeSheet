@@ -17,6 +17,7 @@ namespace WorkTimeSheet.DbModels
         DbSet<UserRoleMapping> UserRoleMappings { get; set; }
         DbSet<WorkLog> WorkLogs { get; set; }
         DbSet<RefreshToken> RefreshTokens { get; set; }
+        DbSet<AccessToken> AccessTokens { get; set; }
 
         int SaveChanges();
     }
