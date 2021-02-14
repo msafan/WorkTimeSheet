@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -105,6 +106,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult Put(int id, [FromBody] WorkLogDTO workLogDTO)
         {
             var workLog = DbContext.WorkLogs
@@ -133,6 +135,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult Delete(int id)
         {
             var workLog = DbContext.WorkLogs

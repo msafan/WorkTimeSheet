@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -24,10 +25,13 @@ namespace WorkTimeSheet
                 return null;
 
             var tokenHandler = new JwtSecurityTokenHandler();
+
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Id.ToString()) };
+            claims.AddRange(user.UserRoles.Select(role => new Claim(ClaimTypes.Role, role.Role)));
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(
-                    new Claim[] { new Claim(ClaimTypes.Name, user.Id.ToString()) }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.Add(Constants.AccessTokenTimeOut),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(Constants.JwtTokenKey),

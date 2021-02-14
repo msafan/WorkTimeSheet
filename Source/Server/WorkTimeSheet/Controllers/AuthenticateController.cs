@@ -26,7 +26,6 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPost]
-        [ProducesDefaultResponseType(typeof(AuthorizedUser))]
         [AllowAnonymous]
         public IActionResult Post([FromBody] UserCredential userCredential)
         {
@@ -49,7 +48,6 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPost("refresh")]
-        [ProducesDefaultResponseType(typeof(AuthorizedUser))]
         [AllowAnonymous]
         public IActionResult RefreshToken([FromBody] AuthorizedUser authorizedUser)
         {

@@ -15,7 +15,7 @@
                     <span>Organization</span>
                 </a>
             </li>
-            <li  *ngIf="isOwner">
+            <li *ngIf="isOwner">
                 <a [routerLink]="['/users']">
                     <i class="icon_profile"></i>
                     <span>User Management</span>
@@ -27,7 +27,7 @@
                     <span>Report</span>
                 </a>
             </li>
-            <li>
+            <li *ngIf="isOwner">
                 <a [routerLink]="['/accessTokens']">
                     <i class="icon_lock-open"></i>
                     <span>Access Tokens</span>

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult GetAll()
         {
             var query = DbContext.AccessTokens
@@ -26,13 +28,15 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult Post(AccessTokenDTO accessTokenDTO)
         {
             var accessToken = new AccessToken
             {
                 ApiKey = Guid.NewGuid().ToString("N"),
                 AppName = accessTokenDTO.AppName,
-                UserId = CurrentUser.Id
+                UserId = CurrentUser.Id,
+                OrganizationId = CurrentUser.OrganizationId
             };
 
             DbContext.AccessTokens.Add(accessToken);
@@ -44,6 +48,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult Delete(int id)
         {
             var accessToken = DbContext.AccessTokens.FirstOrDefault(x => x.Id == id && x.UserId == CurrentUser.Id);

@@ -84,7 +84,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPut("{id}")]
-        [ProducesDefaultResponseType(typeof(OrganizationDTO))]
+        [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult Put(int id, [FromBody] Organization updateModel)
         {
             var organization = DbContext.Organizations.Where(x => x.Id == CurrentUser.OrganizationId).FirstOrDefault(x => x.Id == id);
@@ -93,7 +93,7 @@ namespace WorkTimeSheet.Controllers
 
             organization.Name = updateModel.Name;
             organization.Description = updateModel.Description;
-            
+
             DbContext.Organizations.Update(organization);
             DbContext.SaveChanges();
 
@@ -101,6 +101,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult Delete(int id)
         {
             var organization = DbContext.Organizations

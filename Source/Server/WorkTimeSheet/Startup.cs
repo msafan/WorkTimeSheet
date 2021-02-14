@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -78,6 +77,14 @@ namespace WorkTimeSheet
                 options.DefaultChallengeScheme = HybridTokenAuthenticationSchemeOptions.DefaultScheme;
             }).AddApiKeySupport(options => { });
 
+            services.AddAuthorization(option =>
+            {
+                option.AddPolicy(Constants.UserRoleMember, policyBuilder => { policyBuilder.RequireRole(Constants.UserRoleMember); });
+                option.AddPolicy(Constants.UserRoleOwner, policyBuilder => { policyBuilder.RequireRole(Constants.UserRoleOwner); });
+                option.AddPolicy(Constants.UserRoleProjectManager, policyBuilder => { policyBuilder.RequireRole(Constants.UserRoleProjectManager); });
+                option.AddPolicy("OwnerOrProjectManager", policyBuilder => { policyBuilder.RequireRole(Constants.UserRoleProjectManager, Constants.UserRoleOwner); });
+            });
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
@@ -103,7 +110,7 @@ namespace WorkTimeSheet
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/WorkTimeSheet/swagger/v1/swagger.json", "My API v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1"));
 
             app.UseAuthentication();
             app.UseRouting();
@@ -116,14 +123,12 @@ namespace WorkTimeSheet
                     defaults: new { id = System.Web.Http.RouteParameter.Optional });
             });
 
-            app.UsePathBase("/WorkTimeSheet/");
-
             app.UseSpa(spa =>
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
-                spa.Options.SourcePath = "ClientApp/WorkTimeSheet";
+                spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
                 {

@@ -11,6 +11,7 @@ namespace WorkTimeSheet.DbModels
         {
             Projects = new HashSet<Project>();
             Users = new HashSet<User>();
+            AccessTokens = new HashSet<AccessToken>();
         }
 
         public int Id { get; set; }
@@ -19,5 +20,6 @@ namespace WorkTimeSheet.DbModels
 
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<AccessToken> AccessTokens { get; set; }
     }
 }

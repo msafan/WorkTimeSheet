@@ -253,10 +253,12 @@ namespace WorkTimeSheet.DbModels
             {
                 entity.ToTable("AccessToken");
 
-                entity.HasIndex(e => new { e.UserId, e.AppName }, "UK_AccessToken_User_AppName")
+                entity.HasIndex(e => new { e.OrganizationId, e.AppName }, "UK_AccessToken_Organization_AppName")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.OrganizationId).HasColumnName("FK_ID_Organization");
 
                 entity.Property(e => e.UserId).HasColumnName("FK_ID_User");
 
@@ -269,6 +271,12 @@ namespace WorkTimeSheet.DbModels
                    .IsRequired()
                    .HasMaxLength(50)
                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Organization)
+                    .WithMany(p => p.AccessTokens)
+                    .HasForeignKey(d => d.OrganizationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AccessToken_Oragnization");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.AccessTokens)

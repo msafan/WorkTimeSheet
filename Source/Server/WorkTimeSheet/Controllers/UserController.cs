@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,6 +20,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult GetAll([FromQuery] Pagination pagination, [FromQuery] UserFilterModel filterModel)
         {
             pagination = pagination?.IsValid() ?? false ? pagination : Pagination.Default;
@@ -45,6 +47,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpGet("roles")]
+        [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult GetAllUserRoles()
         {
             var userRoles = DbContext.UserRoles.ToList();
@@ -65,6 +68,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult Post([FromBody] CreateUserModel createUserModel)
         {
             var password = PasswordProtector.Create(createUserModel.Password);
@@ -90,6 +94,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult Put(int id, [FromBody] UserDTO userDTO)
         {
             var user = DbContext.Users.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
@@ -119,6 +124,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult Delete(int id)
         {
             var user = DbContext.Users

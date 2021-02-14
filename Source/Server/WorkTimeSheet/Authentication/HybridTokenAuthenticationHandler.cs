@@ -37,7 +37,8 @@ namespace WorkTimeSheet.Authentication
                 return AuthenticateResult.NoResult();
 
             bool isValidToken = false;
-            int userId = int.MinValue;
+            string userId = string.Empty;
+            IEnumerable<string> roles = new List<string>();
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
@@ -50,28 +51,29 @@ namespace WorkTimeSheet.Authentication
                     ValidateLifetime = true,
                 }, out var validatedToken);
 
-                if (validatedToken is JwtSecurityToken jwtToken)
-                {
-                    isValidToken = true;
-                    userId = string.IsNullOrEmpty(pricipal.Identity.Name) ? int.MinValue : int.Parse(pricipal.Identity.Name);
-                }
+                userId = pricipal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value;
+                roles = pricipal.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value);
+                isValidToken = true;
             }
             catch (Exception)
             {
                 var accessToken = await GetAccessTokenByApiKey(token);
                 if (accessToken != null)
                 {
+                    userId = accessToken.UserId.ToString();
+                    roles = new List<string> { Constants.UserRoleOwner };
                     isValidToken = true;
-                    userId = accessToken.UserId;
                 }
             }
 
-            if (!isValidToken || userId == int.MinValue)
+            if (!isValidToken || string.IsNullOrEmpty(userId) || !roles.Any())
             {
                 return AuthenticateResult.NoResult();
             }
 
             var claims = new List<Claim> { new Claim(ClaimTypes.Name.ToString(), userId.ToString()) };
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+
             var identity = new ClaimsIdentity(claims, Options.AuthenticationType);
             var identities = new List<ClaimsIdentity> { identity };
             var principal = new ClaimsPrincipal(identities);

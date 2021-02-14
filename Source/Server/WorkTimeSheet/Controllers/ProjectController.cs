@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -100,6 +101,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult Post([FromBody] ProjectDTO projectDTO)
         {
             var project = new Project
@@ -119,6 +121,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPut("addmembers/{id}")]
+        [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult AddMembers(int id, [FromBody] List<int> userIds)
         {
             var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
@@ -137,6 +140,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPut("removemembers/{id}")]
+        [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult RemoveMembers(int id, [FromBody] List<int> userIds)
         {
             var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
@@ -154,6 +158,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPut("updatemembers/{id}")]
+        [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult UpdateMembers(int id, [FromBody] List<int> userIds)
         {
             var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
@@ -177,6 +182,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult Put(int id, [FromBody] ProjectDTO projectDTO)
         {
             var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
@@ -198,6 +204,7 @@ namespace WorkTimeSheet.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult Delete(int id)
         {
             var project = DbContext.Projects
