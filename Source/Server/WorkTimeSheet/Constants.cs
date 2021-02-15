@@ -9,6 +9,7 @@ namespace WorkTimeSheet
         public const string UserRoleProjectManager = "Project Manager";
         public const string UserRoleMember = "Member";
         public const string Authorization = "Authorization";
+        public const string ApiKey = "ApiKey";
         public const string Bearer = "Bearer ";
 
         public static TimeSpan AccessTokenTimeOut => TimeSpan.FromHours(1);

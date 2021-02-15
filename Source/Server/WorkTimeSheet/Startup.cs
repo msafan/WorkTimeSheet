@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using WorkTimeSheet.Authentication;
@@ -36,10 +38,10 @@ namespace WorkTimeSheet
             services.AddSwaggerGen(c =>
             {
                 // add JWT Authentication
-                var securityScheme = new OpenApiSecurityScheme
+                var jwtSecutiyScheme = new OpenApiSecurityScheme
                 {
-                    Name = "Access Token",
-                    Description = "Enter JWT Bearer token or Api Key",
+                    Name = "JWT Authentication",
+                    Description = "Enter JWT Bearer",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.Http,
                     Scheme = "bearer", // must be lower case
@@ -50,10 +52,29 @@ namespace WorkTimeSheet
                         Type = ReferenceType.SecurityScheme
                     }
                 };
-                c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+                c.AddSecurityDefinition(jwtSecutiyScheme.Reference.Id, jwtSecutiyScheme);
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
-                    {securityScheme, new string[] { }}
+                    {jwtSecutiyScheme, new string[] { }}
+                });
+
+                var apiKeyScheme = new OpenApiSecurityScheme
+                {
+                    Name = "ApiKey",
+                    Description = "Enter api key",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "ApiKey",
+                    Reference = new OpenApiReference
+                    {
+                        Id = "ApiKey",
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+                c.AddSecurityDefinition(apiKeyScheme.Reference.Id, apiKeyScheme);
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {apiKeyScheme, new string[] { }}
                 });
             });
 
@@ -71,11 +92,27 @@ namespace WorkTimeSheet
                     serviceProvider.GetService<IMapper>());
             });
 
-            services.AddAuthentication(options =>
+            services.AddAuthentication()
+                .AddApiKeySupport(options => { })
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Constants.JwtTokenKey),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
+            services.AddAuthorization(options =>
             {
-                options.DefaultAuthenticateScheme = HybridTokenAuthenticationSchemeOptions.DefaultScheme;
-                options.DefaultChallengeScheme = HybridTokenAuthenticationSchemeOptions.DefaultScheme;
-            }).AddApiKeySupport(options => { });
+                var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(ApiKeySchemeOptions.DefaultScheme,
+                    JwtBearerDefaults.AuthenticationScheme).RequireAuthenticatedUser();
+                options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            });
 
             services.AddAuthorization(option =>
             {

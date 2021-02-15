@@ -2,9 +2,9 @@
 
 namespace WorkTimeSheet.Authentication
 {
-    public class HybridTokenAuthenticationSchemeOptions : AuthenticationSchemeOptions
+    public class ApiKeySchemeOptions : AuthenticationSchemeOptions
     {
-        public const string DefaultScheme = "Bearer";
+        public const string DefaultScheme = "ApiKey";
 
         public string Scheme => DefaultScheme;
         public string AuthenticationType = DefaultScheme;

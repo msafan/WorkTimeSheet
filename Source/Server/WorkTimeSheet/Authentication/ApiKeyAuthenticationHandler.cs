@@ -2,11 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -16,60 +13,29 @@ using WorkTimeSheet.Excepions;
 
 namespace WorkTimeSheet.Authentication
 {
-    public class HybridTokenAuthenticationHandler : AuthenticationHandler<HybridTokenAuthenticationSchemeOptions>
+    public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeySchemeOptions>
     {
-        public HybridTokenAuthenticationHandler(IOptionsMonitor<HybridTokenAuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+        public ApiKeyAuthenticationHandler(IOptionsMonitor<ApiKeySchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
             : base(options, logger, encoder, clock)
         {
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if (!Request.Headers.TryGetValue(Constants.Authorization, out var authToken))
+            if (!Request.Headers.TryGetValue(Constants.ApiKey, out var authToken))
                 return AuthenticateResult.NoResult();
 
-            var token = authToken.ToString();
-            if (token.StartsWith(Constants.Bearer, StringComparison.InvariantCultureIgnoreCase))
-                token = token.Replace(Constants.Bearer, string.Empty);
-            token = token.TrimStart().TrimEnd();
+            var token = authToken.ToString().TrimStart().TrimEnd();
 
             if (string.IsNullOrEmpty(token))
                 return AuthenticateResult.NoResult();
 
-            bool isValidToken = false;
-            string userId = string.Empty;
-            IEnumerable<string> roles = new List<string>();
-            try
-            {
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var pricipal = tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Constants.JwtTokenKey),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
-                }, out var validatedToken);
-
-                userId = pricipal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value;
-                roles = pricipal.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value);
-                isValidToken = true;
-            }
-            catch (Exception)
-            {
-                var accessToken = await GetAccessTokenByApiKey(token);
-                if (accessToken != null)
-                {
-                    userId = accessToken.UserId.ToString();
-                    roles = new List<string> { Constants.UserRoleOwner };
-                    isValidToken = true;
-                }
-            }
-
-            if (!isValidToken || string.IsNullOrEmpty(userId) || !roles.Any())
-            {
+            var accessToken = await GetAccessTokenByApiKey(token);
+            if (accessToken == null)
                 return AuthenticateResult.NoResult();
-            }
+
+            var userId = accessToken.UserId.ToString();
+            var roles = new List<string> { Constants.UserRoleOwner };
 
             var claims = new List<Claim> { new Claim(ClaimTypes.Name.ToString(), userId.ToString()) };
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
