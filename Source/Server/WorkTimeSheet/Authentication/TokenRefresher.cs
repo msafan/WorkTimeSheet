@@ -24,24 +24,7 @@ namespace WorkTimeSheet.Authentication
 
         public AuthorizedUser Refresh(AuthorizedUser authorizedUser)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var pricipal = tokenHandler.ValidateToken(authorizedUser.AccessToken, new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Constants.JwtTokenKey),
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateLifetime = false,
-            }, out var validatedToken) ;
-
-            var jwtToken = validatedToken as JwtSecurityToken;
-            if (jwtToken == null)
-                throw new SecurityTokenException("Invalid access token");
-
-            var userId = string.IsNullOrEmpty(pricipal.Identity.Name) ? -1 : int.Parse(pricipal.Identity.Name);
-
-            var refreshToken = _dbContext.RefreshTokens.FirstOrDefault(x => x.UserId == userId && x.Token == authorizedUser.RefreshToken);
+            var refreshToken = _dbContext.RefreshTokens.FirstOrDefault(x => x.Token == authorizedUser.RefreshToken);
             if (refreshToken == null)
                 throw new SecurityTokenException("Invalid refresh token");
 
