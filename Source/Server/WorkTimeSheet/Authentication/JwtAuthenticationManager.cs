@@ -26,7 +26,12 @@ namespace WorkTimeSheet
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Id.ToString()) };
+            var claims = new List<Claim> 
+            {
+                new Claim(ClaimTypes.Name, user.Name.ToString()),
+                new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                new Claim(ClaimTypes.GroupSid, user.OrganizationId.ToString()) 
+            };
             claims.AddRange(user.UserRoles.Select(role => new Claim(ClaimTypes.Role, role.Role)));
 
             var tokenDescriptor = new SecurityTokenDescriptor

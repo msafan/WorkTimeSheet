@@ -27,7 +27,7 @@ namespace WorkTimeSheet.Controllers
             var query = DbContext.WorkLogs
                 .Include(x => x.Project)
                 .Include(x => x.User)
-                .Where(x => x.User.OrganizationId == CurrentUser.OrganizationId);
+                .Where(x => x.User.OrganizationId == CurrentUserOrganizationId);
 
             if (filterModel.Names != null)
                 query = query.Where(x => filterModel.Names.Any(y => x.User.Name.Contains(y)));
@@ -46,10 +46,9 @@ namespace WorkTimeSheet.Controllers
             if (filterModel.ProjectIds != null)
                 query = query.Where(x => filterModel.ProjectIds.Contains(x.ProjectId));
 
-            var isOwner = DbContext.UserRoleMappings.Any(x => x.UserId == CurrentUser.Id && x.UserRoleId == 1);
-            if (!isOwner)
+            if (!CurrentUserRoles.Contains(Constants.UserRoleOwner))
             {
-                var projectsIds = DbContext.ProjectMembers.Where(x => x.UserId == CurrentUser.Id).Select(x => x.ProjectId);
+                var projectsIds = DbContext.ProjectMembers.Where(x => x.UserId == CurrentUserId).Select(x => x.ProjectId);
                 query = query.Where(x => projectsIds.Contains(x.ProjectId));
             }
 
@@ -75,7 +74,7 @@ namespace WorkTimeSheet.Controllers
             var workLog = DbContext.WorkLogs
                 .Include(x => x.Project)
                 .Include(x => x.User)
-                .Where(x => x.User.OrganizationId == CurrentUser.OrganizationId)
+                .Where(x => x.User.OrganizationId == CurrentUserOrganizationId)
                 .FirstOrDefault(x => x.Id == id);
             if (workLog == null)
                 throw new DataNotFoundException($"No work found with work id: {id}");
@@ -87,18 +86,17 @@ namespace WorkTimeSheet.Controllers
         [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult Post([FromBody] WorkLogDTO workLogDTO)
         {
-            var project = DbContext.Projects.FirstOrDefault(x => x.Id == workLogDTO.ProjectId && x.OrganizationId == CurrentUser.OrganizationId);
+            var project = DbContext.Projects.FirstOrDefault(x => x.Id == workLogDTO.ProjectId && x.OrganizationId == CurrentUserOrganizationId);
             if (project == null)
                 throw new DataNotFoundException($"Project with id: {workLogDTO.ProjectId} not found");
 
-            var user = DbContext.Users.FirstOrDefault(x => x.Id == workLogDTO.UserId && x.OrganizationId == CurrentUser.OrganizationId);
+            var user = DbContext.Users.FirstOrDefault(x => x.Id == workLogDTO.UserId && x.OrganizationId == CurrentUserOrganizationId);
             if (user == null)
                 throw new DataNotFoundException($"User with id: {workLogDTO.UserId} not found");
 
-            var userRoles = DbContext.UserRoleMappings.Include(x => x.UserRole).Where(x => x.UserId == CurrentUser.Id).Select(x => x.UserRole.Role).ToList();
-            if (!userRoles.Contains(Constants.UserRoleOwner) && userRoles.Contains(Constants.UserRoleProjectManager))
+            if (!CurrentUserRoles.Contains(Constants.UserRoleOwner) && CurrentUserRoles.Contains(Constants.UserRoleProjectManager))
             {
-                var partOfProject = DbContext.ProjectMembers.Any(x => x.ProjectId == project.Id && x.UserId == CurrentUser.Id);
+                var partOfProject = DbContext.ProjectMembers.Any(x => x.ProjectId == project.Id && x.UserId == CurrentUserId);
                 if (!partOfProject)
                     throw new ForbiddenException("User not authorized to perform this operation");
             }
@@ -130,18 +128,17 @@ namespace WorkTimeSheet.Controllers
         [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult Put(int id, [FromBody] WorkLogDTO workLogDTO)
         {
-            var project = DbContext.Projects.FirstOrDefault(x => x.Id == workLogDTO.ProjectId && x.OrganizationId == CurrentUser.OrganizationId);
+            var project = DbContext.Projects.FirstOrDefault(x => x.Id == workLogDTO.ProjectId && x.OrganizationId == CurrentUserOrganizationId);
             if (project == null)
                 throw new DataNotFoundException($"Project with id: {workLogDTO.ProjectId} not found");
 
-            var user = DbContext.Users.FirstOrDefault(x => x.Id == workLogDTO.UserId && x.OrganizationId == CurrentUser.OrganizationId);
+            var user = DbContext.Users.FirstOrDefault(x => x.Id == workLogDTO.UserId && x.OrganizationId == CurrentUserOrganizationId);
             if (user == null)
                 throw new DataNotFoundException($"User with id: {workLogDTO.UserId} not found");
 
-            var userRoles = DbContext.UserRoleMappings.Include(x => x.UserRole).Where(x => x.UserId == CurrentUser.Id).Select(x => x.UserRole.Role).ToList();
-            if (!userRoles.Contains(Constants.UserRoleOwner) && userRoles.Contains(Constants.UserRoleProjectManager))
+            if (!CurrentUserRoles.Contains(Constants.UserRoleOwner) && CurrentUserRoles.Contains(Constants.UserRoleProjectManager))
             {
-                var partOfProject = DbContext.ProjectMembers.Any(x => x.ProjectId == project.Id && x.UserId == CurrentUser.Id);
+                var partOfProject = DbContext.ProjectMembers.Any(x => x.ProjectId == project.Id && x.UserId == CurrentUserId);
                 if (!partOfProject)
                     throw new ForbiddenException("User not authorized to perform this operation");
             }
@@ -151,7 +148,7 @@ namespace WorkTimeSheet.Controllers
 
             var workLog = DbContext.WorkLogs
                 .Include(x => x.User)
-                .Where(x => x.User.OrganizationId == CurrentUser.OrganizationId)
+                .Where(x => x.User.OrganizationId == CurrentUserOrganizationId)
                 .FirstOrDefault(x => x.Id == id);
 
             if (workLog == null)
@@ -181,7 +178,7 @@ namespace WorkTimeSheet.Controllers
         {
             var workLog = DbContext.WorkLogs
                 .Include(x => x.User)
-                .Where(x => x.User.OrganizationId == CurrentUser.OrganizationId)
+                .Where(x => x.User.OrganizationId == CurrentUserOrganizationId)
                 .FirstOrDefault(x => x.Id == id);
             if (workLog == null)
                 throw new DataNotFoundException($"No work found with work id: {id}");

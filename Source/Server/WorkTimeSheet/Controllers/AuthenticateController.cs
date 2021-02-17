@@ -13,7 +13,7 @@ using WorkTimeSheet.Models;
 namespace WorkTimeSheet.Controllers
 {
     [Route("api/authenticate")]
-    [ApiExplorerSettings(IgnoreApi = true)]
+    //[ApiExplorerSettings(IgnoreApi = true)]
     public class AuthenticateController : ApiControllerBase
     {
         private readonly IJwtAuthenticationManager _authenticationManager;

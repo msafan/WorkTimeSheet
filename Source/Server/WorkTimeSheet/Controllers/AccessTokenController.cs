@@ -22,7 +22,7 @@ namespace WorkTimeSheet.Controllers
         public IActionResult GetAll()
         {
             var query = DbContext.AccessTokens
-                .Where(x => x.UserId == CurrentUser.Id).ToList();
+                .Where(x => x.UserId == CurrentUserId).ToList();
 
             return Ok(Mapper.Map<List<AccessTokenDTO>>(query));
         }
@@ -35,8 +35,8 @@ namespace WorkTimeSheet.Controllers
             {
                 ApiKey = Guid.NewGuid().ToString("N"),
                 AppName = accessTokenDTO.AppName,
-                UserId = CurrentUser.Id,
-                OrganizationId = CurrentUser.OrganizationId
+                UserId = CurrentUserId,
+                OrganizationId = CurrentUserOrganizationId
             };
 
             DbContext.AccessTokens.Add(accessToken);
@@ -51,7 +51,7 @@ namespace WorkTimeSheet.Controllers
         [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult Delete(int id)
         {
-            var accessToken = DbContext.AccessTokens.FirstOrDefault(x => x.Id == id && x.UserId == CurrentUser.Id);
+            var accessToken = DbContext.AccessTokens.FirstOrDefault(x => x.Id == id);
             if (accessToken == null)
                 throw new DataNotFoundException($"Access token / Api key not found with Id: {id}");
 

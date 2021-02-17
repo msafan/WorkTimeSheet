@@ -28,7 +28,7 @@ namespace WorkTimeSheet.Controllers
 
             var query = DbContext.Users.Include(x => x.UserRoleMappings)
                 .ThenInclude(x => x.UserRole)
-                .Where(x => x.OrganizationId == CurrentUser.OrganizationId);
+                .Where(x => x.OrganizationId == CurrentUserOrganizationId);
 
             if (!string.IsNullOrEmpty(filterModel.Name))
                 query = query.Where(x => x.Name.Contains(filterModel.Name));
@@ -57,7 +57,7 @@ namespace WorkTimeSheet.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var user = DbContext.Users.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
+            var user = DbContext.Users.Where(x => x.OrganizationId == CurrentUserOrganizationId)
                 .Include(x => x.UserRoleMappings)
                 .ThenInclude(x => x.UserRole)
                 .FirstOrDefault(x => x.Id == id);
@@ -78,7 +78,7 @@ namespace WorkTimeSheet.Controllers
                 Email = createUserModel.Email,
                 Password = password.HashedPassword,
                 Salt = password.Salt,
-                OrganizationId = CurrentUser.OrganizationId,
+                OrganizationId = CurrentUserOrganizationId,
                 UserRoleMappings = createUserModel.RoleIds.Select(x => new UserRoleMapping { UserRoleId = x }).ToList(),
                 CurrentWork = new CurrentWork()
             };
@@ -97,7 +97,7 @@ namespace WorkTimeSheet.Controllers
         [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult Put(int id, [FromBody] UserDTO userDTO)
         {
-            var user = DbContext.Users.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
+            var user = DbContext.Users.Where(x => x.OrganizationId == CurrentUserOrganizationId)
                 .Include(x => x.UserRoleMappings)
                 .ThenInclude(x => x.UserRole)
                 .FirstOrDefault(x => x.Id == id);
@@ -132,7 +132,7 @@ namespace WorkTimeSheet.Controllers
                 .Include(x => x.ProjectMembers)
                 .Include(x => x.UserRoleMappings)
                 .Include(x => x.WorkLogs)
-                .Where(x => x.OrganizationId == CurrentUser.OrganizationId)
+                .Where(x => x.OrganizationId == CurrentUserOrganizationId)
                 .FirstOrDefault(x => x.Id == id);
             if (user == null)
                 throw new DataNotFoundException($"No user found on Id: {id}");

@@ -31,7 +31,7 @@ namespace WorkTimeSheet.Controllers
         [ProducesDefaultResponseType(typeof(OrganizationDTO))]
         public IActionResult GetMyOrganization()
         {
-            var organization = DbContext.Organizations.Include(x => x.Users).Include(x => x.Projects).FirstOrDefault(x => x.Id == CurrentUser.OrganizationId);
+            var organization = DbContext.Organizations.Include(x => x.Users).Include(x => x.Projects).FirstOrDefault(x => x.Id == CurrentUserOrganizationId);
             if (organization == null)
                 throw new DataNotFoundException($"No Organization found");
 
@@ -87,7 +87,7 @@ namespace WorkTimeSheet.Controllers
         [Authorize(Roles = Constants.UserRoleOwner)]
         public IActionResult Put(int id, [FromBody] Organization updateModel)
         {
-            var organization = DbContext.Organizations.Where(x => x.Id == CurrentUser.OrganizationId).FirstOrDefault(x => x.Id == id);
+            var organization = DbContext.Organizations.Where(x => x.Id == CurrentUserOrganizationId).FirstOrDefault(x => x.Id == id);
             if (organization == null)
                 throw new DataNotFoundException($"Organization with Id = {id}, is not accessible for current user");
 
@@ -107,7 +107,7 @@ namespace WorkTimeSheet.Controllers
             var organization = DbContext.Organizations
                 .Include(x => x.Users)
                 .Include(x => x.Projects)
-                .Where(x => x.Id == CurrentUser.OrganizationId).FirstOrDefault(x => x.Id == id);
+                .Where(x => x.Id == CurrentUserOrganizationId).FirstOrDefault(x => x.Id == id);
             if (organization == null)
                 throw new DataNotFoundException($"Organization with Id = {id}, is not accessible for current user");
 

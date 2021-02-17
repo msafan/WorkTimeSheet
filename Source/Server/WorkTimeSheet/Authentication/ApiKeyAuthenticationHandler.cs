@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -34,12 +35,13 @@ namespace WorkTimeSheet.Authentication
             if (accessToken == null)
                 return AuthenticateResult.NoResult();
 
-            var userId = accessToken.UserId.ToString();
-            var roles = new List<string> { Constants.UserRoleOwner };
-
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name.ToString(), userId.ToString()) };
-            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, accessToken.User.Name.ToString()),
+                new Claim(ClaimTypes.Sid, accessToken.User.Id.ToString()),
+                new Claim(ClaimTypes.GroupSid, accessToken.User.OrganizationId.ToString()),
+                new Claim(ClaimTypes.Role, Constants.UserRoleOwner)
+            };
             var identity = new ClaimsIdentity(claims, Options.AuthenticationType);
             var identities = new List<ClaimsIdentity> { identity };
             var principal = new ClaimsPrincipal(identities);
@@ -53,7 +55,7 @@ namespace WorkTimeSheet.Authentication
             return Task.Run(() =>
             {
                 var dbContext = (IDbContext)Request.HttpContext.RequestServices.GetService(typeof(IDbContext));
-                return dbContext.AccessTokens.FirstOrDefault(x => x.ApiKey == apiKey);
+                return dbContext.AccessTokens.Include(x => x.User).FirstOrDefault(x => x.ApiKey == apiKey);
             });
         }
 

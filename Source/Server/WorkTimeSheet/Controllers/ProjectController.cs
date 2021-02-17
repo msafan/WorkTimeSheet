@@ -27,7 +27,7 @@ namespace WorkTimeSheet.Controllers
 
             var query = DbContext.Projects
                 .Include(x => x.ProjectMembers)
-                .Where(x => x.OrganizationId == CurrentUser.OrganizationId);
+                .Where(x => x.OrganizationId == CurrentUserOrganizationId);
 
             if (!string.IsNullOrEmpty(filterModel.Name))
                 query = query.Where(x => x.Name.Contains(filterModel.Name));
@@ -50,7 +50,7 @@ namespace WorkTimeSheet.Controllers
         {
             pagination = pagination?.IsValid() ?? false ? pagination : Pagination.Default;
 
-            var query = DbContext.ProjectMembers.Where(x => x.UserId == CurrentUser.Id).Include(x => x.Project).Select(x => x.Project);
+            var query = DbContext.ProjectMembers.Where(x => x.UserId == CurrentUserId).Include(x => x.Project).Select(x => x.Project);
             query = Paginate(query, pagination, out var paginationToReturn);
 
             return Ok(new PaginatedResults<ProjectDTO>
@@ -71,7 +71,7 @@ namespace WorkTimeSheet.Controllers
                 .Include(x => x.User)
                 .ThenInclude(x => x.UserRoleMappings)
                 .ThenInclude(x => x.UserRole)
-                .Where(x => x.User.OrganizationId == CurrentUser.OrganizationId);
+                .Where(x => x.User.OrganizationId == CurrentUserOrganizationId);
 
             if (!string.IsNullOrEmpty(filterModel.Name))
                 query = query.Where(x => x.User.Name.Contains(filterModel.Name));
@@ -92,7 +92,7 @@ namespace WorkTimeSheet.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
+            var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUserOrganizationId)
                 .FirstOrDefault(x => x.Id == id);
             if (project == null)
                 throw new DataNotFoundException($"No project found on Id: {id}");
@@ -108,7 +108,7 @@ namespace WorkTimeSheet.Controllers
             {
                 Name = projectDTO.Name,
                 Description = projectDTO.Description,
-                OrganizationId = CurrentUser.OrganizationId
+                OrganizationId = CurrentUserOrganizationId
             };
 
             DbContext.Projects.Add(project);
@@ -124,7 +124,7 @@ namespace WorkTimeSheet.Controllers
         [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult AddMembers(int id, [FromBody] List<int> userIds)
         {
-            var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
+            var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUserOrganizationId)
                 .FirstOrDefault(x => x.Id == id);
 
             if (project == null)
@@ -143,7 +143,7 @@ namespace WorkTimeSheet.Controllers
         [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult RemoveMembers(int id, [FromBody] List<int> userIds)
         {
-            var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
+            var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUserOrganizationId)
                 .FirstOrDefault(x => x.Id == id);
 
             if (project == null)
@@ -161,7 +161,7 @@ namespace WorkTimeSheet.Controllers
         [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult UpdateMembers(int id, [FromBody] List<int> userIds)
         {
-            var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
+            var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUserOrganizationId)
                .FirstOrDefault(x => x.Id == id);
 
             if (project == null)
@@ -185,7 +185,7 @@ namespace WorkTimeSheet.Controllers
         [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult Put(int id, [FromBody] ProjectDTO projectDTO)
         {
-            var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUser.OrganizationId)
+            var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUserOrganizationId)
                 .FirstOrDefault(x => x.Id == id);
 
             if (project == null)
@@ -211,7 +211,7 @@ namespace WorkTimeSheet.Controllers
                 .Include(x => x.CurrentWorks)
                 .Include(x => x.ProjectMembers)
                 .Include(x => x.WorkLogs)
-                .Where(x => x.OrganizationId == CurrentUser.OrganizationId)
+                .Where(x => x.OrganizationId == CurrentUserOrganizationId)
                 .FirstOrDefault(x => x.Id == id);
             if (project == null)
                 throw new DataNotFoundException($"No project found on Id: {id}");
