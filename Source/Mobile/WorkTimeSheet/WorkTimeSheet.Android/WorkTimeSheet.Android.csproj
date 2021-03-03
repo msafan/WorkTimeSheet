@@ -39,6 +39,16 @@
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidDexTool>d8</AndroidDexTool>
     <AndroidUseAapt2>true</AndroidUseAapt2>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+    <BundleAssemblies>false</BundleAssemblies>
+    <MandroidI18n />
+    <AndroidKeyStore>true</AndroidKeyStore>
+    <AndroidSigningKeyStore>C:\Work\Projects\WorkTimeSheet\Source\Mobile\WorkTimeSheet\WorkTimeSheet.Android\worktimesheet.keystore</AndroidSigningKeyStore>
+    <AndroidSigningStorePass>123456</AndroidSigningStorePass>
+    <AndroidSigningKeyAlias>worktimesheet</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>123456</AndroidSigningKeyPass>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
