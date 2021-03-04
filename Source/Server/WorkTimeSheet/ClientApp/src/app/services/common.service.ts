@@ -1,17 +1,25 @@
-import { Injectable, TemplateRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { Observable } from 'rxjs';
 import { NgxNotificationStatusMsg } from '../lib/NotificationMsgLibrary/ngx-notification-msg.component';
 import { NgxNotificationMsgService } from '../lib/NotificationMsgLibrary/ngx-notification-msg.serice';
+import { GlobalSettings } from '../models/global-settings';
+import { BaseWebApiService } from './base-web-api.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class CommonService {
+export class CommonService extends BaseWebApiService {
+
+    private api = 'api/common/';
+
 
     constructor(private ngxNotificationMsgService: NgxNotificationMsgService,
-        public modalService: BsModalService){
-
-        }
+        public modalService: BsModalService, globalSettings: GlobalSettings,
+        public httpClient: HttpClient, @Inject('BASE_URL') public baseUrl: string) {
+        super(globalSettings, httpClient, baseUrl);
+    }
 
     public toTimeFormat(totalSeconds: number): string {
         const seconds = totalSeconds % 60;
@@ -81,5 +89,18 @@ export class CommonService {
             header: header,
             messages: [message]
         });
+    }
+
+    public downloadFile(data: any, contentType: any, fileName: any): void {
+        let blob = new Blob([data], { type: contentType });
+        var blobURL = window.URL.createObjectURL(blob);
+        var anchor = document.createElement("a");
+        anchor.download = fileName;
+        anchor.href = blobURL;
+        anchor.click();
+    }
+
+    public getApkFile(): Observable<any> {
+        return this.httpClient.get(this.api + "apk", { headers: this.getHeader(), responseType: 'arraybuffer' });
     }
 }

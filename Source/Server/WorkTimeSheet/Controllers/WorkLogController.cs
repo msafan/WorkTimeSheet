@@ -124,9 +124,10 @@ namespace WorkTimeSheet.Controllers
             return Ok(Mapper.Map<WorkLogDTO>(workLog));
         }
 
-        [HttpPut("{id}")]
+        //[HttpPut("{id}")]
+        [HttpPost("{id}")]
         [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
-        public IActionResult Put(int id, [FromBody] WorkLogDTO workLogDTO)
+        public IActionResult Edit(int id, [FromBody] WorkLogDTO workLogDTO)
         {
             var project = DbContext.Projects.FirstOrDefault(x => x.Id == workLogDTO.ProjectId && x.OrganizationId == CurrentUserOrganizationId);
             if (project == null)

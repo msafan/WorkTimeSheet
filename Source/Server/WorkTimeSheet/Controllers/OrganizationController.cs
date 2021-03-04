@@ -83,9 +83,10 @@ namespace WorkTimeSheet.Controllers
             return Ok(Mapper.Map<OrganizationDTO>(organization));
         }
 
-        [HttpPut("{id}")]
+        //[HttpPut("{id}")]
+        [HttpPost("{id}")]
         [Authorize(Roles = Constants.UserRoleOwner)]
-        public IActionResult Put(int id, [FromBody] Organization updateModel)
+        public IActionResult Edit(int id, [FromBody] Organization updateModel)
         {
             var organization = DbContext.Organizations.Where(x => x.Id == CurrentUserOrganizationId).FirstOrDefault(x => x.Id == id);
             if (organization == null)

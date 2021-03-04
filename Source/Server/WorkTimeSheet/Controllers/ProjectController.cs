@@ -120,7 +120,8 @@ namespace WorkTimeSheet.Controllers
             return Ok(Mapper.Map<ProjectDTO>(project));
         }
 
-        [HttpPut("addmembers/{id}")]
+        //[HttpPut("addmembers/{id}")]
+        [HttpPost("addmembers/{id}")]
         [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult AddMembers(int id, [FromBody] List<int> userIds)
         {
@@ -139,7 +140,8 @@ namespace WorkTimeSheet.Controllers
             return NoContent();
         }
 
-        [HttpPut("removemembers/{id}")]
+        //[HttpPut("removemembers/{id}")]
+        [HttpPost("removemembers/{id}")]
         [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult RemoveMembers(int id, [FromBody] List<int> userIds)
         {
@@ -157,7 +159,8 @@ namespace WorkTimeSheet.Controllers
             return NoContent();
         }
 
-        [HttpPut("updatemembers/{id}")]
+        //[HttpPut("updatemembers/{id}")]
+        [HttpPost("updatemembers/{id}")]
         [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
         public IActionResult UpdateMembers(int id, [FromBody] List<int> userIds)
         {
@@ -181,9 +184,10 @@ namespace WorkTimeSheet.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id}")]
+        //[HttpPut("{id}")]
+        [HttpPost("{id}")]
         [Authorize(Roles = Constants.UserRoleOwner + "," + Constants.UserRoleProjectManager)]
-        public IActionResult Put(int id, [FromBody] ProjectDTO projectDTO)
+        public IActionResult Edit(int id, [FromBody] ProjectDTO projectDTO)
         {
             var project = DbContext.Projects.Where(x => x.OrganizationId == CurrentUserOrganizationId)
                 .FirstOrDefault(x => x.Id == id);

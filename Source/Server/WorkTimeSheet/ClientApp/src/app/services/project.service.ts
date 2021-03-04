@@ -38,7 +38,8 @@ export class ProjectService extends BaseWebApiService {
   }
 
   public edit(id: number, projectName: ProjectModel): Observable<ProjectModel> {
-    return this.put<ProjectModel>(this.api + id, projectName);
+    // return this.put<ProjectModel>(this.api + id, projectName);
+    return this.post<ProjectModel>(this.api + id, projectName);
   }
 
   public getAllMembers(projectId: number): Observable<PaginatedResults<UserModel>> {
@@ -46,6 +47,7 @@ export class ProjectService extends BaseWebApiService {
   }
 
   public updateMembers(projectId: number, userIds: number[]): Observable<PaginatedResults<UserModel>> {
-    return this.put<PaginatedResults<UserModel>>(this.api + "updatemembers/" + projectId, userIds);
+    // return this.put<PaginatedResults<UserModel>>(this.api + "updatemembers/" + projectId, userIds);
+    return this.post<PaginatedResults<UserModel>>(this.api + "updatemembers/" + projectId, userIds);
   }
 }

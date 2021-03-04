@@ -40,7 +40,8 @@ export class UserService extends BaseWebApiService {
   }
 
   public edituser(id: number, userModel: UserModel): Observable<UserModel> {
-    return this.put<UserModel>(this.api + id, userModel);
+    // return this.put<UserModel>(this.api + id, userModel);
+    return this.post<UserModel>(this.api + id, userModel);
   }
 
   public deleteUser(userId: number): Observable<any> {

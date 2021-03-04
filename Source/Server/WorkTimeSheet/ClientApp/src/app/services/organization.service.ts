@@ -28,6 +28,7 @@ export class OrganizationService extends BaseWebApiService {
   }
 
   public edit(id: number, organizationModel: OrganizationModel) {
-    return this.put<OrganizationModel>(this.api + id, organizationModel);
+    // return this.put<OrganizationModel>(this.api + id, organizationModel);
+    return this.post<OrganizationModel>(this.api + id, organizationModel);
   }
 }

@@ -93,9 +93,10 @@ namespace WorkTimeSheet.Controllers
             return Ok(Mapper.Map<UserDTO>(user));
         }
 
-        [HttpPut("{id}")]
+        //[HttpPut("{id}")]
+        [HttpPost("{id}")]
         [Authorize(Roles = Constants.UserRoleOwner)]
-        public IActionResult Put(int id, [FromBody] UserDTO userDTO)
+        public IActionResult Edit(int id, [FromBody] UserDTO userDTO)
         {
             var user = DbContext.Users.Where(x => x.OrganizationId == CurrentUserOrganizationId)
                 .Include(x => x.UserRoleMappings)
