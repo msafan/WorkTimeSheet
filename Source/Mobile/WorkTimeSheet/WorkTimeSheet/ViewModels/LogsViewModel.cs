@@ -65,7 +65,14 @@ namespace WorkTimeSheet.ViewModels
             if (SelectedProject == null || _userSettings == null || _userSettings.AuthorizedUser == null)
                 return;
 
-            var workLogs = await _workLogService.GetAll(Pagination.NoPagination, new WorkLogFilterModel { ProjectId = SelectedProject.Id, UserId = _userSettings.AuthorizedUser.UserId });
+            var workLogs = await _workLogService.GetAll(Pagination.NoPagination, new WorkLogFilterModel
+            {
+
+                ProjectIds = new[] { SelectedProject.Id },
+                UserIds = new[] { _userSettings.AuthorizedUser.UserId },
+                StartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                EndDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month), 23, 59, 59)
+            });
             WorkLogs = workLogs.PaginatedResults.Items;
             TotalTime = workLogs.TotalTime;
         }

@@ -48,7 +48,7 @@ export class CommonService extends BaseWebApiService {
         var date = new Date();
         return new Date(date.getFullYear(),
             date.getMonth(),
-            this.daysInMonth(date.getMonth() + 1, date.getFullYear())).toUTCString();
+            this.daysInMonth(date.getMonth() + 1, date.getFullYear()), 23, 59, 59).toUTCString();
     }
 
     private daysInMonth(month, year): number {

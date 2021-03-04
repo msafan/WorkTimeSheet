@@ -86,7 +86,11 @@ export class ReportComponent extends BaseComponent implements OnInit {
       this.filterModel.userIds = this.selectedUsers.map(x => x.id);
 
     this.filterModel.startDate = this.dateRange[0].toUTCString();
-    this.filterModel.endDate = this.dateRange[1].toUTCString();
+    if (this.dateRange[1].getHours() == 0 && this.dateRange[1].getMinutes() == 0 && this.dateRange[1].getSeconds() == 0)
+      this.filterModel.endDate = new Date(this.dateRange[1].getFullYear(), this.dateRange[1].getMonth(), this.dateRange[1].getDate(),
+        23, 59, 59).toUTCString();
+    else
+      this.filterModel.endDate = this.dateRange[1].toUTCString();
 
     this.workLogService.getAll(this.filterModel).subscribe(response => {
       this.workLogs = response.paginatedResults.items;

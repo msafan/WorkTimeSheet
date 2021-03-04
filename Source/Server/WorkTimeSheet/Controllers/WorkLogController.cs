@@ -34,8 +34,6 @@ namespace WorkTimeSheet.Controllers
             if (filterModel.ProjectNames != null)
                 query = query.Where(x => filterModel.ProjectNames.Any(y => x.Project.Name.Contains(y)));
 
-            filterModel.EndDate = filterModel.EndDate.Value.AddDays(1);
-
             if (filterModel.StartDate != null)
                 query = query.Where(x => x.StartDateTime >= filterModel.StartDate);
             if (filterModel.EndDate != null)
