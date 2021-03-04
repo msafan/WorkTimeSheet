@@ -1,0 +1,1 @@
+msbuild /restore /t:PackageForAndroid /t:SignAndroidPackage /p:Configuration=Release

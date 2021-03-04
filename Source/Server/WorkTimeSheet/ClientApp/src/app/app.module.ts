@@ -24,6 +24,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { ProjectComponent } from './pages/project/project.component';
 import { ReportComponent } from './pages/report/report.component';
 import { UsersComponent } from './pages/users/users.component';
+import { MobileAppsComponent } from './pages/mobile-apps/mobile-apps.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { UsersComponent } from './pages/users/users.component';
     ProjectComponent,
     ProfileComponent,
     AccessTokensComponent,
+    MobileAppsComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -55,6 +57,7 @@ import { UsersComponent } from './pages/users/users.component';
       { path: 'report', component: ReportComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'accessTokens', component: AccessTokensComponent },
+      { path: 'mobileApps', component: MobileAppsComponent },
       { path: 'project/:id', component: ProjectComponent }
     ]),
     BrowserAnimationsModule,

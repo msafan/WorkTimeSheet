@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using WorkTimeSheet.DbModels;
-using WorkTimeSheet.Excepions;
+using WorkTimeSheet.Exceptions;
 
 namespace WorkTimeSheet.Authentication
 {

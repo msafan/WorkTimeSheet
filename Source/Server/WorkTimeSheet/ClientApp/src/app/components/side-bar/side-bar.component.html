@@ -27,6 +27,12 @@
                     <span>Report</span>
                 </a>
             </li>
+            <li>
+                <a [routerLink]="['/mobileApps']">
+                    <i class="icon_mobile"></i>
+                    <span>Mobile Apps</span>
+                </a>
+            </li>
             <li *ngIf="isOwner">
                 <a [routerLink]="['/accessTokens']">
                     <i class="icon_lock-open"></i>

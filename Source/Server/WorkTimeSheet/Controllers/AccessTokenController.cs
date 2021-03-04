@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WorkTimeSheet.DbModels;
 using WorkTimeSheet.DTO;
-using WorkTimeSheet.Excepions;
+using WorkTimeSheet.Exceptions;
 
 namespace WorkTimeSheet.Controllers
 {

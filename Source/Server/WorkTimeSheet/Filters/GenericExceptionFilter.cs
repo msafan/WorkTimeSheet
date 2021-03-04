@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using WorkTimeSheet.Excepions;
+using WorkTimeSheet.Exceptions;
 
 namespace WorkTimeSheet.Filters
 {
