@@ -5,10 +5,10 @@
                         prism:ViewModelLocator.AutowireViewModel="True"
                         x:Class="WorkTimeSheet.Views.Logout" Title="{Binding Title}">
     <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
-        <Label FontSize="Header" Text="Do you want to logout?"/>
+        <Label FontSize="Large" Text="Do you want to logout?"/>
         <StackLayout HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
-            <Button FontSize="48" BackgroundColor="Green" Padding="30" CornerRadius="10" TextColor="White" Text="No" Command="{Binding NavigateToDashboardCommand}"/>
-            <Button FontSize="48" BackgroundColor="Red" Padding="30" CornerRadius="10" TextColor="White" Text="Yes" Command="{Binding LogoutCommand}"/>
+            <Button FontSize="24" BackgroundColor="Green" Padding="15" CornerRadius="10" TextColor="White" Text="No" Command="{Binding NavigateToDashboardCommand}"/>
+            <Button FontSize="24" BackgroundColor="Red" Padding="15" CornerRadius="10" TextColor="White" Text="Yes" Command="{Binding LogoutCommand}"/>
         </StackLayout>
     </StackLayout>
 </ContentPage>
