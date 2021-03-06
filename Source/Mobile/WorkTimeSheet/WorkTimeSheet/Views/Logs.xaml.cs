@@ -2,7 +2,7 @@
 
 namespace WorkTimeSheet.Views
 {
-    public partial class Logs : ContentPage
+    public partial class Logs
     {
         public Logs()
         {

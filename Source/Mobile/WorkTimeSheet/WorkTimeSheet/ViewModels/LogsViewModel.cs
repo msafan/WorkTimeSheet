@@ -44,6 +44,7 @@ namespace WorkTimeSheet.ViewModels
         private async void Initialize()
         {
             SelectedProject = null;
+            WorkLogs = new List<WorkLog>();
 
             var projects = await _projectService.GetAll(Pagination.NoPagination, new ProjectFilterModel { UserId = _userSettings.AuthorizedUser.UserId });
             Projects = projects.Items;

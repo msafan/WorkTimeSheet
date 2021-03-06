@@ -12,9 +12,10 @@ namespace WorkTimeSheet.ViewModels
     {
         private readonly IUserSettings _userSettings;
 
-        public LogoutViewModel(INavigationService navigationService, IUserSettings userSettings):base(navigationService)
+        public LogoutViewModel(INavigationService navigationService, IUserSettings userSettings) : base(navigationService)
         {
             _userSettings = userSettings;
+            Title = "Logout";
         }
 
         public override void OnNavigatedTo(INavigationParameters parameters)

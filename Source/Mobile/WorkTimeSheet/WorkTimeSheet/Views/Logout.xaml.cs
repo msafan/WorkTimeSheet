@@ -1,8 +1,9 @@
-﻿using Xamarin.Forms;
+﻿using WorkTimeSheet.ViewModels;
+using Xamarin.Forms;
 
 namespace WorkTimeSheet.Views
 {
-    public partial class Logout : ContentPage
+    public partial class Logout
     {
         public Logout()
         {

@@ -48,7 +48,7 @@ namespace WorkTimeSheet.ViewModels
                 {
                     var authorizedUser = await _authenticationService.RefreshAuthentication(_userSettings.AuthorizedUser);
                     _userSettings.AuthorizedUser = authorizedUser;
-                    await NavigationService.NavigateAsync("/MasterDetail/NavigationPage/Dashboard");
+                    await NavigationService.NavigateAsync("/TabbedPageCollection");
                 }
                 catch (Exception ex)
                 {
@@ -68,7 +68,7 @@ namespace WorkTimeSheet.ViewModels
             {
                 var authorizedUser = await _authenticationService.Authenticate(Email, Password);
                 _userSettings.AuthorizedUser = authorizedUser;
-                await NavigationService.NavigateAsync("/MasterDetail/NavigationPage/Dashboard");
+                await NavigationService.NavigateAsync("/TabbedPageCollection");
             }
             catch (Exception ex)
             {

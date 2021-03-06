@@ -2,9 +2,9 @@
 
 namespace WorkTimeSheet.Views
 {
-    public partial class MasterDetail : MasterDetailPage
+    public partial class TabbedPageCollection : TabbedPage
     {
-        public MasterDetail()
+        public TabbedPageCollection()
         {
             InitializeComponent();
         }

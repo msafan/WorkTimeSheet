@@ -32,10 +32,10 @@ namespace WorkTimeSheet
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<Dashboard, DashboardViewModel>();
-            containerRegistry.RegisterForNavigation<MasterDetail, MasterDetailViewModel>();
             containerRegistry.RegisterForNavigation<Dashboard, DashboardViewModel>();
             containerRegistry.RegisterForNavigation<Logout, LogoutViewModel>();
             containerRegistry.RegisterForNavigation<Logs, LogsViewModel>();
+            containerRegistry.RegisterForNavigation<TabbedPageCollection, TabbedPageCollectionViewModel>();
 
             containerRegistry.Register<IWebApiLayer, WebApiLayer>();
             containerRegistry.Register<IUserSettings, UserSettings>();

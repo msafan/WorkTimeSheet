@@ -2,7 +2,7 @@
 
 namespace WorkTimeSheet.Views
 {
-    public partial class Dashboard : ContentPage
+    public partial class Dashboard
     {
         public Dashboard()
         {
