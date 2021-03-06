@@ -1,10 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<base:BaseContentPage   xmlns="http://xamarin.com/schemas/2014/forms"
+<ContentPage   xmlns="http://xamarin.com/schemas/2014/forms"
                         xmlns:prism="http://prismlibrary.com"
                         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                         xmlns:converters="clr-namespace:WorkTimeSheet.Converters"
                         xmlns:utils="clr-namespace:WorkTimeSheet.Utils"
-                        xmlns:base="clr-namespace:WorkTimeSheet.Views"
                         prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="WorkTimeSheet.Views.Logs" Title="{Binding Title}">
     <ContentPage.Resources>
@@ -71,4 +70,4 @@
             <Label FontSize="24" Text="{Binding TotalTime, Converter={StaticResource SecondsToTimeSpanConverter}}"/>
         </StackLayout>
     </Grid>
-</base:BaseContentPage>
+</ContentPage>

@@ -35,7 +35,7 @@ namespace WorkTimeSheet.ViewModels
         public long TotalTime { get => _totalTime; set => SetProperty(ref _totalTime, value); }
         public ICommand ProjectChangedCommand => _projectChangedCommand ?? (_projectChangedCommand = new DelegateCommand(ExecuteProjectChangedCommand));
 
-        public override void OnNavigatedTo(INavigationParameters parameters)
+        public override void Initialize(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
             Initialize();

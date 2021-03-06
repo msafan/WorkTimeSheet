@@ -57,7 +57,7 @@ namespace WorkTimeSheet.ViewModels
         public ICommand StartWorkCommand => _startWorkCommand ?? (_startWorkCommand = new DelegateCommand(ExecuteStartWorkCommand, CanExecuteStartWorkCommand).ObservesProperty(() => SelectedProject));
         public ICommand StopWorkCommand => _stopWorkCommand ?? (_stopWorkCommand = new DelegateCommand(ExecuteStopWorkCommand, CanExecuteStopWorkCommand).ObservesProperty(() => Remarks));
 
-        public override void OnNavigatedTo(INavigationParameters parameters)
+        public override void Initialize(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
             Initialize();
